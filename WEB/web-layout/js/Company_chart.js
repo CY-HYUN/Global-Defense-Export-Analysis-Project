@@ -2,37 +2,37 @@ import { fetchJsonData } from './common.js';
 
 const clusterFilePaths = {
     군집1: [
-        '../assets/data/companies/clusters/cluster-1/항공및우주기술_1.json',
-        '../assets/data/companies/clusters/cluster-1/항공및우주기술_2.json',
-        '../assets/data/companies/clusters/cluster-1/항공및우주기술_3.json',
-        '../assets/data/companies/clusters/cluster-1/항공및우주기술_4.json',
+        '../assets/data/companies/군집1/항공및우주기술_1.json',
+        '../assets/data/companies/군집1/항공및우주기술_2.json',
+        '../assets/data/companies/군집1/항공및우주기술_3.json',
+        '../assets/data/companies/군집1/항공및우주기술_4.json',
     ],
     군집2: [
-        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_1.json',
-        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_2.json',
-        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_3.json',
+        '../assets/data/companies/군집2/해양방위및조선업_1.json',
+        '../assets/data/companies/군집2/해양방위및조선업_2.json',
+        '../assets/data/companies/군집2/해양방위및조선업_3.json',
     ],
     군집3: [
-        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_1.json',
-        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_2.json',
-        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_3.json',
-        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_4.json',
+        '../assets/data/companies/군집3/지상방위및무기시스템_1.json',
+        '../assets/data/companies/군집3/지상방위및무기시스템_2.json',
+        '../assets/data/companies/군집3/지상방위및무기시스템_3.json',
+        '../assets/data/companies/군집3/지상방위및무기시스템_4.json',
     ],
     군집4: [
-        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_1.json',
-        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_2.json',
-        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_3.json',
+        '../assets/data/companies/군집4/전자및시스템주요제품_1.json',
+        '../assets/data/companies/군집4/전자및시스템주요제품_2.json',
+        '../assets/data/companies/군집4/전자및시스템주요제품_3.json',
     ],
     군집5: [
-        '../assets/data/companies/clusters/cluster-5/germany/라인메탈.json',
-        '../assets/data/companies/clusters/cluster-5/usa/록히드마틴.json',
-        '../assets/data/companies/clusters/cluster-5/usa/노스롭그루먼.json',
-        '../assets/data/companies/clusters/cluster-5/usa/레이시온테크놀로지스.json',
-        '../assets/data/companies/clusters/cluster-5/usa/보잉.json',
-        '../assets/data/companies/clusters/cluster-5/usa/제너럴다이내믹스.json',
-        '../assets/data/companies/clusters/cluster-5/uk/BAE시스템스.json',
-        '../assets/data/companies/clusters/cluster-5/china/중국항공공업집단.json',
-        '../assets/data/companies/clusters/cluster-5/france/탈레스그룹_사프란.json',
+        '../assets/data/companies/군집5/독일/라인메탈.json',
+        '../assets/data/companies/군집5/미국/록히드마틴.json',
+        '../assets/data/companies/군집5/미국/노스롭그루먼.json',
+        '../assets/data/companies/군집5/미국/레이시온테크놀로지스.json',
+        '../assets/data/companies/군집5/미국/보잉.json',
+        '../assets/data/companies/군집5/미국/제너럴다이내믹스.json',
+        '../assets/data/companies/군집5/영국/BAE시스템스.json',
+        '../assets/data/companies/군집5/중국/중국항공공업집단.json',
+        '../assets/data/companies/군집5/프랑스/탈레스그룹_사프란.json',
     ],
 };
 
@@ -43,6 +43,22 @@ const numberToColorMap = {
     16: '#ADD8E6', 17: '#90EE90', 18: '#FF7F50', 19: '#FF6347', 20: '#6A5ACD',
     21: '#8A2BE2', 22: '#4682B4'
 };
+
+// Helper function to get country for company in 군집5
+function getCountryForCompany(companyName) {
+    const companyCountryMap = {
+        '라인메탈': '독일',
+        '록히드마틴': '미국',
+        '노스롭그루먼': '미국',
+        '레이시온테크놀로지스': '미국',
+        '보잉': '미국',
+        '제너럴다이내믹스': '미국',
+        'BAE시스템스': '영국',
+        '중국항공공업집단': '중국',
+        '탈레스그룹_사프란': '프랑스'
+    };
+    return companyCountryMap[companyName] || null;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     const pieChartCanvas = document.getElementById('companyImportPieChart')?.getContext('2d');
@@ -63,22 +79,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     continue;
                 }
                 const countryMap = {
-                    '독일': 'germany',
-                    '미국': 'usa',
-                    '영국': 'uk',
-                    '중국': 'china',
-                    '프랑스': 'france'
+                    '독일': '독일',
+                    '미국': '미국',
+                    '영국': '영국',
+                    '중국': '중국',
+                    '프랑스': '프랑스'
                 };
-                path = `../assets/data/companies/clusters/cluster-5/${countryMap[country] || country}/${company}.json`;
+                path = `../assets/data/companies/군집5/${countryMap[country] || country}/${company}.json`;
             } else {
                 // 군집5 외 다른 군집의 경로
                 const clusterMap = {
-                    '군집1': 'cluster-1',
-                    '군집2': 'cluster-2',
-                    '군집3': 'cluster-3',
-                    '군집4': 'cluster-4'
+                    '군집1': 'companies/군집1',
+                    '군집2': 'companies/군집2',
+                    '군집3': 'companies/군집3',
+                    '군집4': 'companies/군집4'
                 };
-                path = `../assets/data/companies/clusters/${clusterMap[cluster]}/${company}.json`;
+                path = `../assets/data/${clusterMap[cluster]}/${company}.json`;
             }
     
             try {
@@ -216,10 +232,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
 
-// HTML에 적절한 크기를 설정
-const pieChartContainer = document.getElementById('companyImportPieChart').parentElement;
-pieChartContainer.style.width = '570px'; // 차트 컨테이너 너비
-pieChartContainer.style.height = '570px'; // 차트 컨테이너 높이
+// HTML에 적절한 크기를 설정 (optional - only if element exists)
+const pieChartContainer = document.getElementById('companyImportPieChart')?.parentElement;
+if (pieChartContainer) {
+    pieChartContainer.style.width = '570px'; // 차트 컨테이너 너비
+    pieChartContainer.style.height = '570px'; // 차트 컨테이너 높이
+}
 
 
 // 군집 이름과 해당 설명을 매핑
@@ -253,40 +271,47 @@ function populateCompanyDropdown(cluster) {
     companySelector.appendChild(allOption);
 }
 
-    document.getElementById('clusterSelector').addEventListener('change', () => {
-        const cluster = document.getElementById('clusterSelector').value;
-        if (cluster) {
-            populateCompanyDropdown(cluster);
-        }
-    });
+    const clusterSelector = document.getElementById('clusterSelector');
+    const companySelector = document.getElementById('companySelector');
 
-    document.getElementById('companySelector').addEventListener('change', async () => {
-        const cluster = document.getElementById('clusterSelector').value;
-        const company = document.getElementById('companySelector').value;
+    if (clusterSelector) {
+        clusterSelector.addEventListener('change', () => {
+            const cluster = clusterSelector.value;
+            if (cluster) {
+                populateCompanyDropdown(cluster);
+            }
+        });
+    }
 
-        if (!cluster || !company) {
-            alert('군집과 회사를 모두 선택하세요.');
-            return;
-        }
+    if (companySelector) {
+        companySelector.addEventListener('change', async () => {
+            const cluster = document.getElementById('clusterSelector')?.value;
+            const company = companySelector.value;
 
-        let companiesToFetch = [];
-        if (company === 'all') {
-            companiesToFetch = (clusterFilePaths[cluster] || []).map((filePath) =>
-                filePath.split('/').pop().replace('.json', '')
-            );
-        } else {
-            companiesToFetch = [company];   
-        }
+            if (!cluster || !company) {
+                alert('군집과 회사를 모두 선택하세요.');
+                return;
+            }
 
-        const { categoryCounts, productDetails } = await fetchCategoryCountsForCompanies(cluster, companiesToFetch);
+            let companiesToFetch = [];
+            if (company === 'all') {
+                companiesToFetch = (clusterFilePaths[cluster] || []).map((filePath) =>
+                    filePath.split('/').pop().replace('.json', '')
+                );
+            } else {
+                companiesToFetch = [company];
+            }
 
-        if (Object.keys(categoryCounts).length === 0) {
-            alert(`유효한 데이터를 가져올 수 없습니다. 파일을 확인하세요.`);
-            return;
-        }        
-        const labels = Object.keys(categoryCounts);
-        const values = Object.values(categoryCounts);
+            const { categoryCounts, productDetails } = await fetchCategoryCountsForCompanies(cluster, companiesToFetch);
 
-        initializePieChart(labels, values, productDetails);
-    });
+            if (Object.keys(categoryCounts).length === 0) {
+                alert(`유효한 데이터를 가져올 수 없습니다. 파일을 확인하세요.`);
+                return;
+            }
+            const labels = Object.keys(categoryCounts);
+            const values = Object.values(categoryCounts);
+
+            initializePieChart(labels, values, productDetails);
+        });
+    }
 });

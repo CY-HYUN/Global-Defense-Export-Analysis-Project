@@ -224,7 +224,7 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 
 const jsonFiles = {
-    economy: '../assets/data/core/economy.json',
+    economy: '../../assets/data/Economy_data.json',
 };
 
 let jsonDataCache = {};

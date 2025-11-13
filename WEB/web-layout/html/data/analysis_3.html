@@ -8,166 +8,26 @@
         <meta name="author" content="" />
 
         <title>Static Navigation - SB Admin</title>
-        <link href="/WEB/web-layout/css/layout.css" rel="stylesheet" />
+        <link href="../../css/layout.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
-        <script src="/WEB/web-layout/js/Company_chart.js" type="module" defer></script>
-        <script src="/WEB/web-layout/data/나라별지형_with_coordinates.json"></script>
-        <script src="/WEB/web-layout/data/R&D_Data.js" type="application/javascript" defer></script>
+        <!-- Company chart handling is done inline in this file -->
+        <!-- <script type="module" src="../../js/Company_chart.js"></script> -->
+        <script type="module" src="../../js/R&D_Data.js"></script>
 
         <!-- 공통 기능 -->
-        <script type="module" src="/WEB/web-layout/js/common.js"></script>
+        <script type="module" src="../../js/common.js"></script>
 
         <!-- 그래프-->
-        <script type="module" src="/WEB/web-layout/js/weapon_system_pie.js"></script>
-        <script type="module" src="/WEB/web-layout/js/weapon_import_pie.js"></script>
-        <script type="module" src="/WEB/web-layout/js/Company_chart.js"></script>
-        <script>
-
-const clusters = {
-    '군집1': ['항공및우주기술_1', '항공및우주기술_2', '항공및우주기술_3', '항공및우주기술_4'],
-    '군집2': ['해양방위및조선업_1', '해양방위및조선업_2', '해양방위및조선업_3'],
-    '군집3': ['지상방위및무기시스템_1', '지상방위및무기시스템_2', '지상방위및무기시스템_3', '지상방위및무기시스템_4'],
-    '군집4': ['전자및시스템주요제품_1', '전자및시스템주요제품_2', '전자및시스템주요제품_3'],
-    '군집5': ['독일', '미국', '영국', '중국', '프랑스'] // 군집5 국가 목록
-};
-
-// 기업(또는 국가) 드롭다운 업데이트
-function updateCompanyDropdown() {
-    const clusterSelector = document.getElementById('clusterSelector');
-    const companySelector = document.getElementById('companySelector');
-    const selectedCluster = clusterSelector.value;
-
-    companySelector.innerHTML = '<option value="" disabled selected>기업을 선택하세요</option>';
-
-    if (clusters[selectedCluster]) {
-        clusters[selectedCluster].forEach(company => {
-            const option = document.createElement('option');
-            option.value = company;
-            option.textContent = company;
-            companySelector.appendChild(option);
-        });
-    }
-}
-
-// 파일명에서 공백과 특수문자 처리
-function formatFileName(name) {
-    return name
-        .replace(/\s+/g, '')         // 공백 제거
-        .replace(/[()]/g, '')        // 괄호 제거
-        .replace(/,+/g, '');         // 콤마 제거
-}
-
-async function fetchAndVisualize(cluster, company) {
-    if (!cluster || !company) {
-        alert('군집과 기업(국가)을 모두 선택하세요.');
-        return;
-    }
-
-    let filePath;
-    if (cluster === '군집5') {
-        const country = getCountryForCompany(company.trim());
-        if (!country) {
-            alert(`선택된 기업(${company})에 대한 국가를 찾을 수 없습니다.`);
-            return;
-        }
-        filePath = `./data/${cluster}/${country}/${company}.json`;
-    } else {
-        filePath = `./data/${cluster}/${company}.json`;
-    }
-
-    console.log("Fetching data from:", filePath);
-
-    try {
-        const response = await fetch(filePath);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        const data = await response.json();
-        console.log("Fetched Data:", data);
-
-        if (!Array.isArray(data) || data.length === 0) {
-            alert('유효한 데이터를 가져올 수 없습니다.');
-            return;
-        }
-
-        const labels = data.map(item => item.category || 'Unknown');
-        const values = data.map(item => item.value || 0);
-
-        visualizePieChart(labels, values);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        alert('데이터를 가져오는 중 오류가 발생했습니다.');
-    }
-}
-function getCountryForCompany(company) {
-    const companyCountryMap = {
-        '라인메탈': '독일',
-        '록히드마틴': '미국',
-        '노스롭그루먼': '미국',
-        '레이시온테크놀로지스': '미국',
-        '보잉': '미국',
-        '제너럴다이내믹스': '미국',
-        'BAE시스템스': '영국',
-        '중국항공공업집단': '중국',
-        '탈레스그룹_사프란': '프랑스'
-    };
-
-    return companyCountryMap[company.trim()] || null;
-}
-
-            function visualizePieChart(labels, values) {
-                const ctx = document.getElementById('companyImportPieChart').getContext('2d');
-
-                if (importPieChart) {
-                    importPieChart.destroy(); // 기존 차트를 제거
-                }
-
-                importPieChart = new Chart(ctx, {
-                    type: 'pie', // 차트 타입을 파이로 설정
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            backgroundColor: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF'],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'top' },
-                            title: {
-                                display: true,
-                                text: 'Company Import Distribution'
-                            }
-                        }
-                    }
-                });
-            }
-
-
-            document.getElementById('companySelector').addEventListener('change', () => {
-                const cluster = document.getElementById('clusterSelector').value;
-                const company = document.getElementById('companySelector').value;
-                fetchAndVisualize(cluster, company);
-            });
-        </script>
+        <script type="module" src="../../js/weapon_system_pie.js"></script>
+        <script type="module" src="../../js/weapon_import_pie.js"></script>
 <script>
     const jsonFiles = {
-        terrainData: '/WEB/web-layout/data/나라별지형_with_coordinates.json',
+        terrainData: '../../assets/data/나라별지형_with_coordinates.json',
     };
-    document.addEventListener("DOMContentLoaded", () => {
-    const countrySelector = document.getElementById("countrySelector");
-    const terrainTableContainer = document.getElementById("countryTerrainTable");
-
-    if (!countrySelector || !terrainTableContainer) {
-        console.error("countrySelector 또는 countryTerrainTable을 찾을 수 없습니다.");
-        return;
-    }
-
-    loadCountryData(countrySelector, terrainTableContainer);
-});
+    // 페이지 로드 후 국가 데이터 로드는 나중에 통합된 DOMContentLoaded에서 실행
 
 function visualizePieChart(labels, values) {
     const ctx = document.getElementById('pieChart').getContext('2d');
@@ -198,7 +58,7 @@ function visualizePieChart(labels, values) {
 
 async function loadCountryData(countrySelector, terrainTableContainer) {
     try {
-        const response = await fetch('/WEB/web-layout/data/나라별지형_with_coordinates.json');
+        const response = await fetch('../../assets/data/나라별지형_with_coordinates.json');
         if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
         const countryData = await response.json();
 
@@ -217,10 +77,14 @@ async function loadCountryData(countrySelector, terrainTableContainer) {
         countrySelector.addEventListener("change", () => {
             const selectedCountry = countrySelector.value;
             displayCountryTerrainTable(selectedCountry, countryData, terrainTableContainer);
+            displayRNDData(selectedCountry); // R&D 데이터도 표시
+            displayEconomicIndicators(selectedCountry); // 경제 지표 표시
         });
     } catch (error) {
         console.error("Error loading country data:", error);
-        alert("데이터를 로드하는 중 문제가 발생했습니다.");
+        if (terrainTableContainer) {
+            terrainTableContainer.innerHTML = `<div class="alert alert-danger">국가 데이터 로드 실패: ${error.message}</div>`;
+        }
     }
 }
 
@@ -257,7 +121,7 @@ function displayCountryTerrainTable(countryName, countryData) {
 </script>
 
 <script>
-    const RND_DATA_PATH = '/WEB/web-layout/data/R&D_Data.json';
+    const RND_DATA_PATH = '../../assets/data/R&D_Data.json';
     let RND_Data = [];
 
     async function loadRNDData() {
@@ -267,43 +131,38 @@ function displayCountryTerrainTable(countryName, countryData) {
                 throw new Error(`HTTP error: ${response.status}`);
             }
             RND_Data = await response.json();
-            populateCountrySelector();
+            console.log('R&D data loaded successfully:', RND_Data.length, 'records');
         } catch (error) {
             console.error("Error loading R&D Data:", error);
+            // 오류가 발생해도 페이지는 계속 작동하도록 함
         }
-    }
-
-    function populateCountrySelector() {
-        const countrySelector = document.getElementById("countrySelector");
-        const uniqueCountries = [...new Set(RND_Data.map(data => data.Country))];
-        uniqueCountries.forEach(country => {
-            const option = document.createElement("option");
-            option.value = country;
-            option.textContent = country;
-            countrySelector.appendChild(option);
-        });
-
-        countrySelector.addEventListener("change", (event) => {
-            displayRNDData(event.target.value);
-        });
     }
 
     function displayRNDData(countryName) {
         const rndDataTable = document.getElementById("rndDataTable");
+
+        if (!RND_Data || RND_Data.length === 0) {
+            rndDataTable.innerHTML = `
+                <div class="alert alert-info">R&D 데이터를 로딩 중입니다...</div>
+            `;
+            return;
+        }
+
         const countryRND = RND_Data.filter(data => data.Country === countryName);
 
         if (countryRND.length) {
             const tableRows = countryRND.map(data => `
-                <tr class="project-name-row"><td>Project Name</td><td>${data.Project_Name || "No Data"}</td></tr>
-                <tr><td>Program Name</td><td>${data.Program_Name || "No Data"}</td></tr>
-                <tr><td>Objective</td><td>${data.Objective || "No Data"}</td></tr>
-                <tr><td>Features</td><td>${data.Features || "No Data"}</td></tr>
+                <tr class="project-name-row"><td><strong>프로젝트명</strong></td><td>${data.Project_Name || "데이터 없음"}</td></tr>
+                <tr><td>프로그램명</td><td>${data.Program_Name || "데이터 없음"}</td></tr>
+                <tr><td>목적</td><td>${data.Objective || "데이터 없음"}</td></tr>
+                <tr><td>특징</td><td>${data.Features || "데이터 없음"}</td></tr>
+                <tr><td colspan="2" style="height: 10px; background-color: #f0f0f0;"></td></tr>
             `).join("");
 
             rndDataTable.innerHTML = `
                 <table class="table table-bordered">
                     <thead>
-                        <tr><th>Item</th><th>Details</th></tr>
+                        <tr><th style="width: 30%;">항목</th><th>상세 정보</th></tr>
                     </thead>
                     <tbody>
                         ${tableRows}
@@ -312,12 +171,10 @@ function displayCountryTerrainTable(countryName, countryData) {
             `;
         } else {
             rndDataTable.innerHTML = `
-                <div class="alert alert-warning">No R&D data available for ${countryName}.</div>
+                <div class="alert alert-warning">${countryName}에 대한 R&D 데이터가 없습니다.</div>
             `;
         }
     }
-
-    document.addEventListener("DOMContentLoaded", loadRNDData);
 </script>
 
 <style>
@@ -443,7 +300,10 @@ function displayCountryTerrainTable(countryName, countryData) {
     </head> 
     <body>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand ps-3" href="/WEB/web-layout/index.html"><img src="/WEB/web-layout/data/logo.png" style="max-width: 30%; height: auto;"></a>
+            <a class="navbar-brand ps-3" href="../../index.html">
+                <img src="../../assets/images/logos/dmz-logo.png" alt="DMZ Logo"
+                     style="max-width: 100px; height: auto; margin-right: 10px; display: block;">
+            </a>
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
             <!-- <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -465,13 +325,25 @@ function displayCountryTerrainTable(countryName, countryData) {
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading"></div>
-                            <a class="nav-link" href="/WEB/web-layout/html/data/analysis_1.html">국가별 데이터</a>
-                            <a class="nav-link" href="/WEB/web-layout/html/data/analysis_2.html">기업별 데이터</a>
-                            <div class="sb-sidenav-menu-heading">비교 및 분석</div>                
+                            <a class="nav-link" href="analysis_1.html">국가별 데이터</a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseResearch" aria-expanded="false" aria-controls="collapseResearch">
+                                기업별 데이터
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseResearch" aria-labelledby="headingResearch" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="company/항공및우주기술.html"><i class="fas fa-plane"></i> &nbsp; 항공 및 우주기술</a>
+                                    <a class="nav-link" href="company/해양방위및조선업.html"><i class="fas fa-ship"></i> &nbsp; 해양방위</a>
+                                    <a class="nav-link" href="company/전자및시스템주요제품.html"><i class="fas fa-microchip"></i> &nbsp; 전자 및 시스템</a>
+                                    <a class="nav-link" href="company/지상방위및무기시스템.html"><i class="fas fa-shield-alt"></i> &nbsp; 지상방위</a>
+                                    <a class="nav-link" href="company/해외기업.html"><i class="fas fa-globe"></i> &nbsp; 해외기업</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link" href="analysis_3.html">비교 및 분석</a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -517,16 +389,71 @@ function displayCountryTerrainTable(countryName, countryData) {
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><i class="fas fa-chart-bar me-2"></i>비교 및 분석</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="/WEB/web-layout/index.html">Home</a></li>
-                            <li class="breadcrumb-item active">비교 및 분석page</li>
-                        </ol>
-        
+                        <h1 class="mt-4">비교 및 분석 대시보드</h1>
+                        <p class="breadcrumb-item active">국가 및 기업 데이터를 선택하여 비교 분석하세요.</p>
+
+                        <!-- 국가 비교 섹션 -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-globe"></i>
+                                        국가 간 비교 분석
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="compareCountry1">국가 1</label>
+                                                <select id="compareCountry1" class="form-select">
+                                                    <option value="" selected disabled>국가를 선택하세요</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="compareCountry2">국가 2</label>
+                                                <select id="compareCountry2" class="form-select">
+                                                    <option value="" selected disabled>국가를 선택하세요</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="compareCountry3">국가 3 (선택)</label>
+                                                <select id="compareCountry3" class="form-select">
+                                                    <option value="" selected>선택하지 않음</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button onclick="compareCountries()" class="btn btn-primary mt-3">비교 시작</button>
+
+                                        <!-- 비교 결과 차트 -->
+                                        <div class="row mt-4">
+                                            <div class="col-md-6">
+                                                <h5>군사비 지출 비교</h5>
+                                                <div style="height: 400px; position: relative;">
+                                                    <canvas id="militaryExpenseComparisonChart"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5>무기 수출입 비교</h5>
+                                                <div style="height: 400px; position: relative;">
+                                                    <canvas id="armsTradeComparisonChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 비교 데이터 테이블 -->
+                                        <div class="mt-4">
+                                            <h5>상세 비교 데이터</h5>
+                                            <div id="comparisonTable" class="table-responsive"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 기존 콘텐츠를 두 개의 컬럼으로 분리 -->
                         <div class="row">
                             <!-- 국가 선택 섹션 -->
                             <div class="col-md-6 border-end">
-                                <h5>국가 선택</h5>
+                                <h5>- 국가 선택 -</h5>
                                 <div class="mb-4">
                                     <select id="countrySelector" class="form-select">
                                         <option value="" selected disabled>국가를 선택하세요</option>
@@ -574,38 +501,23 @@ function displayCountryTerrainTable(countryName, countryData) {
                                 <!-- 지형 데이터 표시 -->
                                 <div id="countryDataRow" class="row mt-4">
                                 </div>
-        
-                                <!-- 군집 선택 -->
-                                <h5>군집 선택</h5>
-                                <div class="mb-4">
-                                    <select id="clusterSelector" class="form-select" onchange="updateCompanyDropdown()">
-                                        <option value="" selected disabled>군집을 선택하세요</option>
-                                        <option value="군집1">항공 및 우주기술 기업</option>
-                                        <option value="군집2">해양방위 및 조선 기업</option>
-                                        <option value="군집3">지상방위 및 무기시스템 기업</option>
-                                        <option value="군집4">전자 및 시스템 기업</option>
-                                        <option value="군집5">해외 기업</option>
-                                    </select>
+
+                                <!-- 경제 지표 카드 -->
+                                <div id="economicIndicators" class="card mb-4" style="display: none;">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="mb-0">경제 지표</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="economicIndicatorsContent"></div>
+                                    </div>
                                 </div>
-        
-                                <!-- 기업 선택 -->
-                                <h5>기업 선택</h5>
-                                <div class="mb-4">
-                                    <select id="companySelector" class="form-select">
-                                        <option value="" disabled selected>기업을 선택하세요</option>
-                                    </select>
-                                </div>
-        
-                                <!-- 파이 차트 표시 -->
-                                <div class="col-md-12">
-                                    <canvas id="companyImportPieChart" style="width: 500px; height: 500px;"></canvas>
-                                </div>
+
                                 <h5>국가별 지형 정보</h5>
                                 <div id="countryTerrainTable" class="table-responsive"></div>
                                 <h5>국가별 R&D 정보</h5>
                                 <div id="rndDataTable" class="table-responsive"></div>
-                            </div>                                                                                                               
-                        </div>                                             
+                            </div>
+                        </div>
                     </div>
                 </main>
             </div>
@@ -619,15 +531,389 @@ function displayCountryTerrainTable(countryName, countryData) {
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/WEB/web-layout/js/analysis.js" defer></script>
+        <script src="../../js/analysis.js" defer></script>
         <script>
             function toggleInfoBox() {
                 const infoBox = document.getElementById("infoBox");
                 const infoContent = infoBox.querySelector(".info-content");
-        
+
                 // Toggle the 'hidden' class
                 infoContent.classList.toggle("hidden");
             }
+
+            // === 국가 경제 지표 표시 ===
+            function displayEconomicIndicators(countryName) {
+                const indicatorCard = document.getElementById('economicIndicators');
+                const indicatorContent = document.getElementById('economicIndicatorsContent');
+
+                if (!economyData || economyData.length === 0) {
+                    indicatorCard.style.display = 'none';
+                    return;
+                }
+
+                const countryEconomy = economyData.find(d => d.Country === countryName);
+
+                if (countryEconomy) {
+                    indicatorCard.style.display = 'block';
+                    indicatorContent.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">경제 지표</h6>
+                                        <p class="card-text"><strong>${(countryEconomy['Economic Indicator'] / 1000000000).toFixed(2)}</strong> Billion USD</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">글로벌 순위</h6>
+                                        <p class="card-text"><strong>#${countryEconomy['Rank']}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-info">소득 가중치</h6>
+                                        <p class="card-text"><strong>${countryEconomy['Income Weighted']?.toFixed(2) || 'N/A'}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-warning">무역 수지</h6>
+                                        <p class="card-text"><strong>${((countryEconomy['Trade Weighted'] || 0) / 1000000000).toFixed(2)}</strong> Billion USD</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    indicatorCard.style.display = 'none';
+                }
+            }
+
+            // === 국가 비교 기능 ===
+            let allCountriesData = {};
+            let militaryData = [];
+            let armsExportsData = [];
+            let armsImportsData = [];
+            let economyData = [];
+            let governanceData = [];
+
+            // 데이터 로드
+            async function loadComparisonData() {
+                try {
+                    const [military, armsExport, armsImport, economy, governance, terrain] = await Promise.all([
+                        fetch('../../assets/data/military_expenses_data.json').then(r => r.json()),
+                        fetch('../../assets/data/arms_exports_data.json').then(r => r.json()),
+                        fetch('../../assets/data/arms_import_data.json').then(r => r.json()),
+                        fetch('../../assets/data/Economy_data.json').then(r => r.json()),
+                        fetch('../../assets/data/governance_data.json').then(r => r.json()),
+                        fetch('../../assets/data/나라별지형_with_coordinates.json').then(r => r.json())
+                    ]);
+
+                    militaryData = military;
+                    armsExportsData = armsExport;
+                    armsImportsData = armsImport;
+                    economyData = economy;
+                    governanceData = governance;
+
+                    console.log('Data loaded:', {
+                        military: militaryData.length,
+                        armsExport: armsExportsData.length,
+                        armsImport: armsImportsData.length,
+                        economy: economyData.length,
+                        governance: governanceData.length
+                    });
+
+                    // 비교 국가 선택 드롭다운 채우기 - 실제 국가만 필터링
+                    const countrySet = new Set();
+
+                    // Economy 데이터에서 실제 국가만 추출 (집계 데이터 제외)
+                    economy.forEach(d => {
+                        const country = d.Country;
+                        // 지역 집계나 그룹 데이터 제외
+                        if (country &&
+                            !country.includes('income') &&
+                            !country.includes('IDA') &&
+                            !country.includes('IBRD') &&
+                            !country.includes('states') &&
+                            country !== 'World' &&
+                            country !== 'OECD members' &&
+                            !country.includes('dividend')) {
+                            countrySet.add(country);
+                        }
+                    });
+
+                    const countries = Array.from(countrySet).sort();
+
+                    ['compareCountry1', 'compareCountry2', 'compareCountry3'].forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select) {
+                            select.innerHTML = id === 'compareCountry3' ?
+                                '<option value="" selected>선택하지 않음</option>' :
+                                '<option value="" selected disabled>국가를 선택하세요</option>';
+
+                            countries.forEach(country => {
+                                const option = document.createElement('option');
+                                option.value = country;
+                                option.textContent = country;
+                                select.appendChild(option);
+                            });
+                        }
+                    });
+
+                    console.log('Comparison data loaded successfully:', countries.length, 'countries');
+                } catch (error) {
+                    console.error('Error loading comparison data:', error);
+                    const comparisonTable = document.getElementById('comparisonTable');
+                    if (comparisonTable) {
+                        comparisonTable.innerHTML = `<div class="alert alert-danger">비교 데이터 로드 실패: ${error.message}</div>`;
+                    }
+                }
+            }
+
+            let militaryComparisonChart = null;
+            let armsTradeComparisonChart = null;
+
+            async function compareCountries() {
+                const country1 = document.getElementById('compareCountry1').value;
+                const country2 = document.getElementById('compareCountry2').value;
+                const country3 = document.getElementById('compareCountry3').value;
+
+                if (!country1 || !country2) {
+                    alert('최소 2개 국가를 선택하세요.');
+                    return;
+                }
+
+                const countries = [country1, country2];
+                if (country3) countries.push(country3);
+
+                console.log('Comparing countries:', countries);
+
+                // 군사비 비교 차트 - Use GDP Military Weighted from Economy data as bar chart
+                const militaryChartData = {
+                    labels: countries,
+                    datasets: [{
+                        label: '군사비 지출 (Billion USD)',
+                        data: countries.map(country => {
+                            const econData = economyData.find(d => d.Country === country);
+                            const militaryValue = econData && econData['GDP Military Weighted'] ?
+                                econData['GDP Military Weighted'] : 0;
+                            console.log(`${country} military spending:`, militaryValue, 'billion USD');
+                            return militaryValue;
+                        }),
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                        borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                        borderWidth: 1
+                    }]
+                };
+
+                const militaryCtx = document.getElementById('militaryExpenseComparisonChart').getContext('2d');
+                if (militaryComparisonChart) militaryComparisonChart.destroy();
+
+                militaryComparisonChart = new Chart(militaryCtx, {
+                    type: 'bar',
+                    data: militaryChartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: '군사비 지출 비교 (Billion USD)',
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { font: { size: 11 } },
+                                title: {
+                                    display: true,
+                                    text: 'Billion USD'
+                                }
+                            },
+                            x: {
+                                ticks: { font: { size: 11 } }
+                            }
+                        }
+                    }
+                });
+
+                // 무기 수출입 비교 차트 (use 2020 as latest available year)
+                const armsTradeData = {
+                    labels: countries,
+                    datasets: [
+                        {
+                            label: '무기 수출 (2020)',
+                            data: countries.map(country => {
+                                const exports = armsExportsData.find(d => d.Country === country);
+                                if (exports && exports['2020']) {
+                                    return exports['2020'] / 1000000; // Convert to millions
+                                }
+                                return 0;
+                            }),
+                            backgroundColor: '#4BC0C0'
+                        },
+                        {
+                            label: '무기 수입 (2020)',
+                            data: countries.map(country => {
+                                const imports = armsImportsData.find(d => d.Country === country);
+                                if (imports && imports['2020']) {
+                                    return imports['2020'] / 1000000; // Convert to millions
+                                }
+                                return 0;
+                            }),
+                            backgroundColor: '#FF9F40'
+                        }
+                    ]
+                };
+
+                const armsCtx = document.getElementById('armsTradeComparisonChart').getContext('2d');
+                if (armsTradeComparisonChart) armsTradeComparisonChart.destroy();
+
+                armsTradeComparisonChart = new Chart(armsCtx, {
+                    type: 'bar',
+                    data: armsTradeData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: { font: { size: 12 } }
+                            },
+                            title: {
+                                display: true,
+                                text: '무기 수출입 비교 (Million USD)',
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { font: { size: 11 } }
+                            },
+                            x: {
+                                ticks: { font: { size: 11 } }
+                            }
+                        }
+                    }
+                });
+
+                // 비교 테이블 생성
+                displayComparisonTable(countries);
+            }
+
+            function displayComparisonTable(countries) {
+                const tableContainer = document.getElementById('comparisonTable');
+
+                const tableData = countries.map(country => {
+                    // Economy data
+                    const economy = economyData.find(d => d.Country === country);
+
+                    // Military spending from GDP Military Weighted (already in billions)
+                    const militaryValue = economy && economy['GDP Military Weighted'] ?
+                        economy['GDP Military Weighted'].toFixed(2) : 'N/A';
+
+                    // GDP from Economic Indicator
+                    const gdpValue = economy ? ((economy['Economic Indicator'] || 0) / 1000000000).toFixed(2) : 'N/A';
+
+                    // Governance data - use latest year's estimate
+                    const countryGovernance = governanceData.filter(d => d.Country === country);
+                    let govScore = 'N/A';
+                    if (countryGovernance.length > 0) {
+                        // Get most recent year's data
+                        const latestData = countryGovernance.reduce((latest, current) =>
+                            current.year > latest.year ? current : latest
+                        );
+                        govScore = latestData.estimate ? latestData.estimate.toFixed(2) : 'N/A';
+                    }
+
+                    // Arms export data (use 2020 as latest available year)
+                    const armsExport = armsExportsData.find(d => d.Country === country);
+                    const exportValue = armsExport && armsExport['2020'] ?
+                        (armsExport['2020'] / 1000000).toFixed(2) : 'N/A';
+
+                    // Arms import data (use 2020 as latest available year)
+                    const armsImport = armsImportsData.find(d => d.Country === country);
+                    const importValue = armsImport && armsImport['2020'] ?
+                        (armsImport['2020'] / 1000000).toFixed(2) : 'N/A';
+
+                    return {
+                        country,
+                        militaryExpense: militaryValue,
+                        gdp: gdpValue,
+                        governanceScore: govScore,
+                        armsExport: exportValue,
+                        armsImport: importValue
+                    };
+                });
+
+                const tableHTML = `
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>국가</th>
+                                <th>군사비 (Billion USD)</th>
+                                <th>GDP (Billion USD)</th>
+                                <th>거버넌스 점수</th>
+                                <th>무기 수출 (Million USD, 2020)</th>
+                                <th>무기 수입 (Million USD, 2020)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableData.map(data => `
+                                <tr>
+                                    <td><strong>${data.country}</strong></td>
+                                    <td>${data.militaryExpense}</td>
+                                    <td>${data.gdp}</td>
+                                    <td>${data.governanceScore}</td>
+                                    <td>${data.armsExport}</td>
+                                    <td>${data.armsImport}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                tableContainer.innerHTML = tableHTML;
+            }
+
+            // === 통합 페이지 초기화 ===
+            document.addEventListener('DOMContentLoaded', async () => {
+                console.log('Page initialization started...');
+
+                try {
+                    // 1. 국가 비교 데이터 로드
+                    await loadComparisonData();
+
+                    // 2. R&D 데이터 로드
+                    await loadRNDData();
+
+                    // 3. 국가 선택 드롭다운 초기화
+                    const countrySelector = document.getElementById("countrySelector");
+                    const terrainTableContainer = document.getElementById("countryTerrainTable");
+
+                    if (countrySelector && terrainTableContainer) {
+                        await loadCountryData(countrySelector, terrainTableContainer);
+                    } else {
+                        console.error("countrySelector 또는 terrainTableContainer를 찾을 수 없습니다.");
+                    }
+
+                    console.log('Page initialization completed!');
+                } catch (error) {
+                    console.error('Page initialization error:', error);
+                }
+            });
         </script>
     </body>
 </html>

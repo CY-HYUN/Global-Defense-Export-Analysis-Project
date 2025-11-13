@@ -108,7 +108,7 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 
 const jsonFiles = {
-    governance: '../assets/data/core/governance.json',
+    governance: '../../assets/data/governance_data.json',
 };
 
 let radarChart = null; // 전역 변수로 초기화

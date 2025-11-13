@@ -184,14 +184,17 @@ function  getMappedCountryName(inputCountry, countryMapping) {
 
     // JSON 데이터 로드 함수
     async function loadJsonData() {
+        // 현재 페이지 위치에 따라 경로 결정 (index.html은 루트에 있음)
+        const basePath = window.location.pathname.includes('/html/') ? '../../assets/data/' : 'assets/data/';
+
         const jsonFiles = {
-            economy: '../assets/data/core/economy.json',
-            politics: '../assets/data/core/governance.json',
-            military: '../assets/data/core/military-expenses.json',
-            armsExports: '../assets/data/core/arms-exports.json',
-            armsImports: '../assets/data/core/arms-imports.json',
-            weaponSystems: '../assets/data/core/weapon-systems.json',
-            weaponImports: '../assets/data/core/weapon-imports.json',
+            economy: basePath + 'Economy_data.json',
+            politics: basePath + 'governance_data.json',
+            military: basePath + 'military_expenses_data.json',
+            armsExports: basePath + 'arms_exports_data.json',
+            armsImports: basePath + 'arms_import_data.json',
+            weaponSystems: basePath + 'weapon_system_Data.json',
+            weaponImports: basePath + 'weapon_import.json',
             };
 
         const jsonData = {};
@@ -235,6 +238,20 @@ if (title === 'Major Economic Indicators') {
         'Income Weighted', 'Trade Weighted', 'Unemployment Weighted',
         'CPI Weighted', 'Dollar Weighted', 'GDP Debt Weighted'
     ];
+
+    // 각 지표의 의미 설명
+    const indicatorDescriptions = {
+        'GDP Growth Weighted': 'GDP 성장률 가중치 - 경제 성장 속도를 나타내는 지표',
+        'GDP Military Weighted': 'GDP 대비 군사비 가중치 - 국방비 지출 비중',
+        'Int. Cap Weighted': '국제 자본 가중치 - 해외 투자 및 자본 유입',
+        'Income Weighted': '소득 가중치 - 1인당 국민 소득 수준',
+        'Trade Weighted': '무역 가중치 - 대외 무역 활동 규모',
+        'Unemployment Weighted': '실업률 가중치 - 고용 시장 안정성',
+        'CPI Weighted': '소비자물가지수 가중치 - 물가 안정성',
+        'Dollar Weighted': '달러 환율 가중치 - 통화 가치 및 환율 변동성',
+        'GDP Debt Weighted': 'GDP 대비 부채 가중치 - 국가 재정 건전성'
+    };
+
     labels = indicators;
 
     // 로그 변환된 값과 원본 값을 저장
@@ -242,7 +259,8 @@ if (title === 'Major Economic Indicators') {
         const value = countryData[0][indicator] || 0;
         return {
             original: value,
-            log: value > 0 ? Math.log10(value) : 0 // 로그10 변환
+            log: value > 0 ? Math.log10(value) : 0, // 로그10 변환
+            description: indicatorDescriptions[indicator]
         };
     });
 
@@ -253,6 +271,7 @@ if (title === 'Major Economic Indicators') {
         backgroundColor: 'rgba(54, 162, 235, 0.7)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
+        indicatorInfo: logTransformedData
     }];
 
     // 툴팁과 차트 옵션 설정 (글씨 크기 추가)
@@ -267,6 +286,14 @@ if (title === 'Major Economic Indicators') {
                         const originalValue = logTransformedData[index].original;
                         const logValue = logTransformedData[index].log.toFixed(2);
                         return `${labels[index]}: Log(${logValue}) | Original: ${originalValue.toLocaleString()}`;
+                    },
+                    afterLabel: function(context) {
+                        const index = context.dataIndex;
+                        const description = logTransformedData[index].description;
+                        return `\n${description}`;
+                    },
+                    title: function(context) {
+                        return '주요 경제 지표';
                     }
                 }
             },
@@ -276,6 +303,9 @@ if (title === 'Major Economic Indicators') {
                 font: {
                     size: 14 // 제목 글씨 크기
                 }
+            },
+            legend: {
+                display: false  // 기본 범례 숨김 (막대 그래프에는 필요 없음)
             }
         },
         scales: {
@@ -307,7 +337,15 @@ if (title === 'Major Economic Indicators') {
                         size: 9 // X축 눈금 글씨 크기
                     },
                     maxRotation: 0, // 레이블을 수평으로 유지
-                    minRotation: 0
+                    minRotation: 0,
+                    callback: function(value, index, ticks) {
+                        // X축 라벨 간략화
+                        const label = labels[index];
+                        if (label) {
+                            return label.replace(' Weighted', '');
+                        }
+                        return value;
+                    }
                 }
             }
         }
@@ -317,12 +355,21 @@ if (title === 'Major Economic Indicators') {
     // Governance Stability Over Time
     } else if (title === 'Governance Stability Over Time') {
         const indicators = ['CC', 'GE', 'PV', 'RL', 'RQ', 'VA'];
+        const indicatorNames = {
+            'CC': 'Control of Corruption (부패 통제)',
+            'GE': 'Government Effectiveness (정부 효율성)',
+            'PV': 'Political Stability and Absence of Violence (정치 안정성)',
+            'RL': 'Rule of Law (법치주의)',
+            'RQ': 'Regulatory Quality (규제 품질)',
+            'VA': 'Voice and Accountability (국민 참여도 및 책임성)'
+        };
         const colors = ['#FF0000', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#FF00FF'];
 
         labels = [...new Set(countryData.map(item => item.year))]; // 연도 추출
         datasets = indicators.map((indicator, index) => {
             return {
                 label: indicator,
+                fullName: indicatorNames[indicator],
                 data: labels.map(year => {
                     const record = countryData.find(item => item.year === year && item.indicator === indicator.toLowerCase());
                     return record ? record.estimate : null;
@@ -338,18 +385,44 @@ if (title === 'Major Economic Indicators') {
     } else if (title === 'Weapon Systems Distribution') {
         labels = [...new Set(countryData.map(item => item.Category))];
         backgroundColors = generateColors(labels.length);
+
+        // 각 카테고리별 무기 타입 및 개수 수집
+        const categoryDetails = labels.map(category => {
+            const items = countryData.filter(item => item.Category === category);
+            const weaponTypes = [...new Set(items.map(item => item.Metric))];
+            return {
+                category: category,
+                count: items.length,
+                weaponTypes: weaponTypes.slice(0, 3) // 최대 3개의 무기 타입만 표시
+            };
+        });
+
         datasets = [{
-            data: labels.map(category => countryData.filter(item => item.Category === category).length),
+            data: categoryDetails.map(detail => detail.count),
             backgroundColor: backgroundColors,
+            categoryDetails: categoryDetails
         }];
 
     // Weapon Imports Distribution (파이 차트)
     } else if (title === 'Weapon Imports Distribution') {
         labels = [...new Set(countryData.map(item => item['USML Category']))];
         backgroundColors = generateColors(labels.length);
+
+        // 각 카테고리별 무기 설명 및 개수 수집
+        const categoryDetails = labels.map(category => {
+            const items = countryData.filter(item => item['USML Category'] === category);
+            const weaponDescriptions = [...new Set(items.map(item => item['Weapon description']))];
+            return {
+                category: category,
+                count: items.length,
+                weaponDescriptions: weaponDescriptions.slice(0, 3) // 최대 3개의 무기 설명만 표시
+            };
+        });
+
         datasets = [{
-            data: labels.map(category => countryData.filter(item => item['USML Category'] === category).length),
+            data: categoryDetails.map(detail => detail.count),
             backgroundColor: backgroundColors,
+            categoryDetails: categoryDetails
         }];
 
     // 일반 데이터 처리
@@ -369,22 +442,303 @@ if (title === 'Major Economic Indicators') {
     canvas.style.height = '300px';
     container.appendChild(canvas);
 
-    new Chart(canvas.getContext('2d'), {
+    // Weapon Systems/Imports Distribution 차트에 설명 텍스트 추가
+    if (title === 'Weapon Systems Distribution' || title === 'Weapon Imports Distribution') {
+        const descriptionText = document.createElement('p');
+        descriptionText.style.fontSize = '11px';
+        descriptionText.style.color = '#666';
+        descriptionText.style.marginTop = '5px';
+        descriptionText.style.marginBottom = '10px';
+        descriptionText.style.textAlign = 'center';
+        descriptionText.style.fontStyle = 'italic';
+
+        if (title === 'Weapon Systems Distribution') {
+            descriptionText.textContent = '※ 각 카테고리별 무기 시스템 개수를 나타냅니다';
+        } else {
+            descriptionText.textContent = '※ 각 USML 카테고리별 무기 수입 건수를 나타냅니다';
+        }
+
+        container.appendChild(descriptionText);
+    }
+
+    // 차트 옵션 설정
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    font: { size: 10 },
+                    padding: 10
+                }
+            },
+            title: {
+                display: true,
+                text: title,
+                font: { size: 14, weight: 'bold' },
+                padding: { top: 10, bottom: 10 }
+            },
+            tooltip: {
+                callbacks: {}
+            }
+        },
+        scales: chartType === 'bar' || chartType === 'line' ? {
+            x: { title: { display: true, text: 'Year' } },
+            y: { title: { display: true, text: yAxisLabel } },
+        } : {}, // 파이 차트에는 scales 적용 안 함
+    };
+
+    // Military Expenditure 차트를 위한 커스텀 툴팁
+    if (title === 'Military Expenditure') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const value = context.parsed.y;
+                return `군사비 지출: ${value.toLocaleString()} (단위: 10억 달러)`;
+            },
+            afterLabel: function(context) {
+                return '국방 예산 및 군사 투자 규모를 나타냅니다';
+            },
+            title: function(context) {
+                return `${context[0].label}년도`;
+            }
+        };
+    }
+
+    // Arms Exports Over Time 차트를 위한 커스텀 툴팁
+    if (title === 'Arms Exports Over Time') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const value = context.parsed.y;
+                return `무기 수출액: ${value.toLocaleString()} (단위: 10억 달러)`;
+            },
+            afterLabel: function(context) {
+                return '국가의 방위산업 수출 능력을 나타냅니다';
+            },
+            title: function(context) {
+                return `${context[0].label}년도`;
+            }
+        };
+    }
+
+    // Arms Imports Over Time 차트를 위한 커스텀 툴팁
+    if (title === 'Arms Imports Over Time') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const value = context.parsed.y;
+                return `무기 수입액: ${value.toLocaleString()} (단위: 10억 달러)`;
+            },
+            afterLabel: function(context) {
+                return '국가의 무기 수입 의존도 및 방위력 증강을 나타냅니다';
+            },
+            title: function(context) {
+                return `${context[0].label}년도`;
+            }
+        };
+    }
+
+    // Governance Stability Over Time 차트를 위한 커스텀 툴팁
+    if (title === 'Governance Stability Over Time') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const datasetLabel = context.dataset.label || '';
+                const fullName = context.dataset.fullName || datasetLabel;
+                const value = context.parsed.y;
+
+                if (value !== null && value !== undefined) {
+                    return `${datasetLabel} (${fullName}): ${value.toFixed(2)}`;
+                }
+                return `${datasetLabel} (${fullName}): 데이터 없음`;
+            },
+            title: function(context) {
+                return `${context[0].label}년도`;
+            }
+        };
+    }
+
+    // Weapon Systems Distribution 차트를 위한 커스텀 툴팁
+    if (title === 'Weapon Systems Distribution') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const dataIndex = context.dataIndex;
+                const detail = context.dataset.categoryDetails[dataIndex];
+                const value = context.parsed || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+
+                let label = `카테고리 ${detail.category}: ${value}개 시스템 (${percentage}%)`;
+                return label;
+            },
+            afterLabel: function(context) {
+                const dataIndex = context.dataIndex;
+                const detail = context.dataset.categoryDetails[dataIndex];
+
+                if (detail.weaponTypes && detail.weaponTypes.length > 0) {
+                    const weaponList = detail.weaponTypes.join(', ');
+                    return `포함: ${weaponList}${detail.weaponTypes.length >= 3 ? ' 등' : ''}`;
+                }
+                return '';
+            },
+            title: function(context) {
+                return '무기 시스템 분포';
+            }
+        };
+    }
+
+    // Weapon Imports Distribution 차트를 위한 커스텀 툴팁
+    if (title === 'Weapon Imports Distribution') {
+        chartOptions.plugins.tooltip.callbacks = {
+            label: function(context) {
+                const dataIndex = context.dataIndex;
+                const detail = context.dataset.categoryDetails[dataIndex];
+                const value = context.parsed || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+
+                let label = `USML 카테고리 ${detail.category}: ${value}건 수입 (${percentage}%)`;
+                return label;
+            },
+            afterLabel: function(context) {
+                const dataIndex = context.dataIndex;
+                const detail = context.dataset.categoryDetails[dataIndex];
+
+                if (detail.weaponDescriptions && detail.weaponDescriptions.length > 0) {
+                    const weaponList = detail.weaponDescriptions.join(', ');
+                    return `무기 타입: ${weaponList}${detail.weaponDescriptions.length >= 3 ? ' 등' : ''}`;
+                }
+                return '';
+            },
+            title: function(context) {
+                return '무기 수입 분포';
+            }
+        };
+    }
+
+    const chart = new Chart(canvas.getContext('2d'), {
         type: chartType,
         data: { labels: labels, datasets: datasets },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: true },
-                title: { display: true, text: title },
-            },
-            scales: chartType === 'bar' || chartType === 'line' ? {
-                x: { title: { display: true, text: 'Year' } },
-                y: { title: { display: true, text: yAxisLabel } },
-            } : {}, // 파이 차트에는 scales 적용 안 함
-        }
+        options: chartOptions
     });
+
+    // Major Economic Indicators의 X축 라벨에 툴팁 추가
+    if (title === 'Major Economic Indicators') {
+        // 차트가 렌더링된 후 X축 라벨에 툴팁 추가
+        canvas.addEventListener('mousemove', function(event) {
+            const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: false }, true);
+
+            // 기존 툴팁 제거
+            const existingLabelTooltip = document.querySelector('.x-axis-label-tooltip');
+            if (existingLabelTooltip) {
+                existingLabelTooltip.remove();
+            }
+
+            if (points.length > 0) {
+                const point = points[0];
+                const dataIndex = point.index;
+
+                // 데이터셋에 indicatorInfo가 있는 경우 (Major Economic Indicators)
+                if (chart.data.datasets[0].indicatorInfo) {
+                    const info = chart.data.datasets[0].indicatorInfo[dataIndex];
+
+                    // 툴팁 요소 생성
+                    const labelTooltip = document.createElement('div');
+                    labelTooltip.className = 'x-axis-label-tooltip';
+                    labelTooltip.style.cssText = `
+                        position: absolute;
+                        background-color: rgba(0, 0, 0, 0.9);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        z-index: 10001;
+                        pointer-events: none;
+                        white-space: nowrap;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    `;
+
+                    labelTooltip.innerHTML = `<strong>${labels[dataIndex]}</strong><br><span style="font-size: 10px;">${info.description}</span>`;
+                    labelTooltip.style.left = `${event.pageX + 15}px`;
+                    labelTooltip.style.top = `${event.pageY - 30}px`;
+
+                    document.body.appendChild(labelTooltip);
+                }
+            }
+        });
+
+        canvas.addEventListener('mouseleave', function() {
+            const existingLabelTooltip = document.querySelector('.x-axis-label-tooltip');
+            if (existingLabelTooltip) {
+                existingLabelTooltip.remove();
+            }
+        });
+    }
+
+    // Governance Stability Over Time 차트의 범례에 툴팁 추가
+    if (title === 'Governance Stability Over Time') {
+        // Canvas에 마우스 이벤트를 추가하여 범례 호버 감지
+        let legendTooltip = null;
+
+        canvas.addEventListener('mousemove', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // 범례 영역 확인 (Chart.js는 범례를 canvas 하단에 렌더링)
+            const legend = chart.legend;
+            if (!legend) return;
+
+            // 기존 툴팁 제거
+            if (legendTooltip) {
+                legendTooltip.remove();
+                legendTooltip = null;
+            }
+
+            // 범례 항목들을 순회하며 마우스 위치 확인
+            legend.legendItems.forEach((item, index) => {
+                const hitBox = legend.legendHitBoxes[index];
+
+                if (hitBox &&
+                    x >= hitBox.left &&
+                    x <= hitBox.left + hitBox.width &&
+                    y >= hitBox.top &&
+                    y <= hitBox.top + hitBox.height) {
+
+                    const dataset = chart.data.datasets[index];
+
+                    // 툴팁 생성
+                    legendTooltip = document.createElement('div');
+                    legendTooltip.className = 'legend-custom-tooltip';
+                    legendTooltip.style.cssText = `
+                        position: absolute;
+                        background-color: rgba(0, 0, 0, 0.9);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        z-index: 10001;
+                        pointer-events: none;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                        max-width: 300px;
+                    `;
+                    legendTooltip.innerHTML = `
+                        <strong>${dataset.label}</strong><br>
+                        <span style="font-size: 10px;">${dataset.fullName}</span>
+                    `;
+                    legendTooltip.style.left = `${event.pageX + 15}px`;
+                    legendTooltip.style.top = `${event.pageY - 10}px`;
+                    document.body.appendChild(legendTooltip);
+                }
+            });
+        });
+
+        canvas.addEventListener('mouseleave', function() {
+            if (legendTooltip) {
+                legendTooltip.remove();
+                legendTooltip = null;
+            }
+        });
+    }
 }
 
 // 색상 생성 함수
@@ -442,12 +796,50 @@ async function loadChartsForCountry(countryName, container) {
                         popupContainer.style.display = 'block';
                         adjustPopupPosition(e.originalEvent, popupContainer);
                         popupContainer.innerHTML = `
-                           <h3 class="popup-country-name" style="cursor: pointer; color: black; text-decoration: none;">${countryName}</h3>
+                           <h3 class="popup-country-name" style="cursor: pointer; color: black; text-decoration: none;" title="클릭하여 ${countryName}의 상세 분석 페이지로 이동">${countryName}</h3>
     <div id="popup-charts"></div>
 `;
 
                         // 팝업 클릭 시 이동 이벤트 추가 (나라 선택 및 URL 업데이트)
                         const popupCountryName = document.querySelector('.popup-country-name');
+
+                        // 툴팁 요소 생성
+                        const countryTooltip = document.createElement('div');
+                        countryTooltip.className = 'country-info-tooltip';
+                        countryTooltip.style.cssText = `
+                            position: absolute;
+                            display: none;
+                            background-color: rgba(0, 0, 0, 0.85);
+                            color: white;
+                            padding: 10px;
+                            border-radius: 5px;
+                            font-size: 12px;
+                            z-index: 10000;
+                            max-width: 250px;
+                            pointer-events: none;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                        `;
+                        document.body.appendChild(countryTooltip);
+
+                        // 마우스 호버 이벤트 추가
+                        popupCountryName.addEventListener('mouseenter', (event) => {
+                            countryTooltip.innerHTML = `
+                                <strong>${countryName}</strong><br>
+                                <span style="font-size: 11px; color: #aaa;">클릭하여 상세 분석 페이지로 이동</span><br>
+                                <span style="font-size: 10px; color: #888; margin-top: 5px; display: block;">아래 차트에 마우스를 올리면 상세 정보를 확인할 수 있습니다</span>
+                            `;
+                            countryTooltip.style.display = 'block';
+                        });
+
+                        popupCountryName.addEventListener('mousemove', (event) => {
+                            countryTooltip.style.left = `${event.pageX + 15}px`;
+                            countryTooltip.style.top = `${event.pageY + 15}px`;
+                        });
+
+                        popupCountryName.addEventListener('mouseleave', () => {
+                            countryTooltip.style.display = 'none';
+                        });
+
                         popupCountryName.addEventListener('click', () => {
                             const targetUrl = new URL('/WEB/web-layout/html/data/analysis_1.html', window.location.origin);
                             targetUrl.searchParams.set('country', countryName); // 쿼리 파라미터에 나라 추가

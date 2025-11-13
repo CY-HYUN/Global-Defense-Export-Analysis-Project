@@ -125,8 +125,8 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 
 const jsonFiles = {
-    armsExports: '/WEB/web-layout/data/arms_exports_data.json',
-    armsImports: '/WEB/web-layout/data/arms_import_data.json',
+    armsExports: '../assets/data/core/arms-exports.json',
+    armsImports: '../assets/data/core/arms-imports.json',
 };
 
 let armsTradeChart = null; // 전역 변수로 초기화

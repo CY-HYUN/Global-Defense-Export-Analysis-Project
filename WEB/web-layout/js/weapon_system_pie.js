@@ -136,7 +136,7 @@ import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from '.
 import './hoverSync.js'; // 차트 동기화 플러그인 추가
 
 const jsonFiles = {
-    weaponData: '/WEB/web-layout/data/weapon_system_Data.json',
+    weaponData: '../assets/data/core/weapon-systems.json',
 };
 
 const numberToColorMap = {

@@ -23,7 +23,10 @@
       "Bash(while read country)",
       "Bash(awk:*)",
       "Bash(for file in \"지상방위및무기시스템.html\" \"전자및시스템주요제품.html\" \"해외기업.html\")",
-      "Bash(do echo \"Processing $file...\")"
+      "Bash(do echo \"Processing $file...\")",
+      "Bash(cat:*)",
+      "Bash(\"D:\\Study\\Github\\Global Defense Export Analysis Project\\README_PROFESSIONAL.md\")",
+      "Bash(\"D:/Study/Github/Global Defense Export Analysis Project/README_PROFESSIONAL.md\")"
     ],
     "deny": [],
     "ask": []

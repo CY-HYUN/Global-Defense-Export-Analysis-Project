@@ -1,5 +1,6 @@
 // Define the path to the JSON file containing R&D data
-const RND_DATA_PATH = '../assets/data/core/research-development.json';
+// Relative to the HTML file location (html/data/analysis_3.html)
+const RND_DATA_PATH = '../../assets/data/R&D_Data.json';
 
 // Initialize an empty array to hold R&D data
 let RND_Data = [];
@@ -20,7 +21,7 @@ async function loadRNDData() {
         console.log("R&D Data loaded successfully:", RND_Data);
     } catch (error) {
         console.error("Error loading R&D Data:", error);
-        alert("R&D 데이터를 로드하는 중 문제가 발생했습니다.");
+        // Silent fail - page will continue to work without R&D data
     }
 }
 

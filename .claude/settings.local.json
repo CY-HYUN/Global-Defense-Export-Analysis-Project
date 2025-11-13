@@ -3,7 +3,27 @@
     "allow": [
       "WebFetch(domain:github.com)",
       "Bash(python:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(for file in \"지상방위및무기시스템.html\" \"해양방위및조선업.html\" \"해외기업.html\")",
+      "Bash(do sed -i 's|<img src=\"\"../../../assets/images/logos/dmz-logo.png\"\" style=\"\"max-width: 30%; height: auto;\"\">|<img src=\"\"../../../assets/images/logos/dmz-logo.svg\"\" alt=\"\"DMZ Logo\"\" style=\"\"max-width: 100px; height: auto; margin-right: 10px;\"\">|g' \"$file\")",
+      "Bash(done)",
+      "Bash(for file in \"about_project/layout-static_1.html\" \"about_project/layout-static_4_unlinked.html\" \"analysis/research_layout_2.html\" \"analysis/research_layout_2_demo.html\")",
+      "Bash(do sed -i 's|<img src=\"\"../../assets/images/logos/dmz-logo.png\"\" style=\"\"max-width: 30%; height: auto;\"\">|<img src=\"\"../../assets/images/logos/dmz-logo.svg\"\" alt=\"\"DMZ Logo\"\" style=\"\"max-width: 100px; height: auto; margin-right: 10px;\"\">|g' \"$file\")",
+      "Bash(echo:*)",
+      "Bash(if [ -f \"index.html\" ])",
+      "Bash(then grep \"dmz-logo\" index.html)",
+      "Bash(else echo \"No index.html found\")",
+      "Bash(fi)",
+      "Bash(git checkout:*)",
+      "Bash(find:*)",
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)",
+      "Bash(ls:*)",
+      "Bash(while read country)",
+      "Bash(awk:*)",
+      "Bash(for file in \"지상방위및무기시스템.html\" \"전자및시스템주요제품.html\" \"해외기업.html\")",
+      "Bash(do echo \"Processing $file...\")"
     ],
     "deny": [],
     "ask": []

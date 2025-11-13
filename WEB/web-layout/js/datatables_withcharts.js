@@ -230,14 +230,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const jsonFiles = {
-        economy: '../assets/data/core/economy.json',
-        politics: '../assets/data/core/governance.json',
-        ucdp: '../assets/data/conflicts/ucdp-main.json',
-        military: '../assets/data/core/military-expenses.json',
-        armsExports: '../assets/data/core/arms-exports.json',
-        armsImports: '../assets/data/core/arms-imports.json',
-        weaponSystems: '../assets/data/core/weapon-systems.json',
-        weaponImports: '../assets/data/core/weapon-imports.json',
+        economy: '../../assets/data/Economy_data.json',
+        politics: '../../assets/data/governance_data.json',
+        ucdp: '../../assets/data/UCDP_data.json',
+        military: '../../assets/data/military_expenses_data.json',
+        armsExports: '../../assets/data/arms_exports_data.json',
+        armsImports: '../../assets/data/arms_import_data.json',
+        weaponSystems: '../../assets/data/weapon_system_Data.json',
+        weaponImports: '../../assets/data/weapon_import.json',
     };
 
     const chartTableMapping = {

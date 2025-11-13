@@ -135,8 +135,10 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 import './hoverSync.js'; // 차트 동기화 플러그인 추가
 
+// Get the base path relative to the HTML file location
+// Since this JS is loaded from html/data/analysis_3.html, we need ../../assets/data/
 const jsonFiles = {
-    weaponImportData: '../assets/data/core/weapon-imports.json',
+    weaponImportData: '../../assets/data/weapon_import.json',
 };
 
 const numberToColorMap = {

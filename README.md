@@ -1031,9 +1031,9 @@ df_interpolated = df.interpolate(method='linear', limit_direction='both')
 
 <div align="center">
 
-**Hanwha Aerospace × Hongik University Acorn Academy Smart Data Analysis Course Team 2 Chunmoo-II**
+**Hanwha Aerospace Smart Data Analysis Course Team 2 Chunmoo-II**
 
-![DMZ Logo](WEB/assets/images/logos/dmz-logo.svg)
+![DMZ Logo](WEB\web-layout\assets\images\logos\dmz-logo.png)
 
 *Defense Monitoring Zone - Defense Industry Target Information Analysis Platform*
 

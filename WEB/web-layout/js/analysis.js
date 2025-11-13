@@ -2,14 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // JSON 파일 경로 정의
     const jsonFiles = {
-        economy: '/WEB/web-layout/data/Economy_data.json',
-        politics: '/WEB/web-layout/data/governance_data.json',
-        ucdp: '/WEB/web-layout/data/UCDP_data.json',
-        military: '/WEB/web-layout/data/military_expenses_data.json',
-        armsExports: '/WEB/web-layout/data/arms_exports_data.json',
-        armsImports: '/WEB/web-layout/data/arms_import_data.json',
-        weaponSystems: '/WEB/web-layout/data/weapon_system_Data.json',
-        weaponImports: '/WEB/web-layout/data/weapon_import.json',
+        economy: '../assets/data/core/economy.json',
+        politics: '../assets/data/core/governance.json',
+        ucdp: '../assets/data/conflicts/ucdp-main.json',
+        military: '../assets/data/core/military-expenses.json',
+        armsExports: '../assets/data/core/arms-exports.json',
+        armsImports: '../assets/data/core/arms-imports.json',
+        weaponSystems: '../assets/data/core/weapon-systems.json',
+        weaponImports: '../assets/data/core/weapon-imports.json',
     };
 
     // JSON 파일 순서 정의 (테이블 표시 순서)

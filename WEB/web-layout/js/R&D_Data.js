@@ -1,5 +1,5 @@
 // Define the path to the JSON file containing R&D data
-const RND_DATA_PATH = '/WEB/web-layout/data/analysis_3/R&D_Data.json';
+const RND_DATA_PATH = '../assets/data/core/research-development.json';
 
 // Initialize an empty array to hold R&D data
 let RND_Data = [];

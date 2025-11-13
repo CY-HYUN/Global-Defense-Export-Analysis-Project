@@ -190,15 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // 여러 테이블 및 JSON 파일 초기화
-    initializeDataTableFromFile('customDataTable', '/WEB/web-layout/data/Economy_data.json');
-    initializeDataTableFromFile('politicsDataTable', '/WEB/web-layout/data/governance_data.json');
-    initializeDataTableFromFile('militaryDataTable', '/WEB/web-layout/data/military_expenses_data.json');
-    initializeDataTableFromFile('ucdpDataTable', '/WEB/web-layout/data/UCDP_data.json');
-    initializeDataTableFromFile('ucdpgedDataTable', '/WEB/web-layout/data/UCDP_GED_2023_data.json');
-    initializeDataTableFromFile('armsexportDataTable', '/WEB/web-layout/data/arms_exports_data.json');
-    initializeDataTableFromFile('armsimportDataTable', '/WEB/web-layout/data/arms_import_data.json');
-    initializeDataTableFromFile('weaponsysDataTable', '/WEB/web-layout/data/weapon_system_Data.json');
-    initializeDataTableFromFile('weaponimportDataTable', '/WEB/web-layout/data/weapon_import.json');
+    initializeDataTableFromFile('customDataTable', '../assets/data/core/economy.json');
+    initializeDataTableFromFile('politicsDataTable', '../assets/data/core/governance.json');
+    initializeDataTableFromFile('militaryDataTable', '../assets/data/core/military-expenses.json');
+    initializeDataTableFromFile('ucdpDataTable', '../assets/data/conflicts/ucdp-main.json');
+    initializeDataTableFromFile('ucdpgedDataTable', '../assets/data/conflicts/ucdp-ged-2023.json');
+    initializeDataTableFromFile('armsexportDataTable', '../assets/data/core/arms-exports.json');
+    initializeDataTableFromFile('armsimportDataTable', '../assets/data/core/arms-imports.json');
+    initializeDataTableFromFile('weaponsysDataTable', '../assets/data/core/weapon-systems.json');
+    initializeDataTableFromFile('weaponimportDataTable', '../assets/data/core/weapon-imports.json');
 
 });
 

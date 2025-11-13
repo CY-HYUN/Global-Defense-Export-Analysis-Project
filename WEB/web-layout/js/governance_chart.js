@@ -118,7 +118,7 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 
 const jsonFiles = {
-    governance: '/WEB/web-layout/data/governance_data.json',
+    governance: '../assets/data/core/governance.json',
 };
 
 let lineChart = null; // 전역 변수로 차트를 초기화 상태로 설정

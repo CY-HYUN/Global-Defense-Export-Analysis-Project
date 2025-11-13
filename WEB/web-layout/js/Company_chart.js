@@ -2,38 +2,38 @@ import { fetchJsonData } from './common.js';
 
 const clusterFilePaths = {
     군집1: [
-        '/WEB/web-layout/data/군집1/항공및우주기술_1.json',
-        '/WEB/web-layout/data/군집1/항공및우주기술_2.json',
-        '/WEB/web-layout/data/군집1/항공및우주기술_3.json',
-        '/WEB/web-layout/data/군집1/항공및우주기술_4.json',
+        '../assets/data/companies/clusters/cluster-1/항공및우주기술_1.json',
+        '../assets/data/companies/clusters/cluster-1/항공및우주기술_2.json',
+        '../assets/data/companies/clusters/cluster-1/항공및우주기술_3.json',
+        '../assets/data/companies/clusters/cluster-1/항공및우주기술_4.json',
     ],
     군집2: [
-        '/WEB/web-layout/data/군집2/해양방위및조선업_1.json',
-        '/WEB/web-layout/data/군집2/해양방위및조선업_2.json',
-        '/WEB/web-layout/data/군집2/해양방위및조선업_3.json',
+        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_1.json',
+        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_2.json',
+        '../assets/data/companies/clusters/cluster-2/해양방위및조선업_3.json',
     ],
     군집3: [
-        '/WEB/web-layout/data/군집3/지상방위및무기시스템_1.json',
-        '/WEB/web-layout/data/군집3/지상방위및무기시스템_2.json',
-        '/WEB/web-layout/data/군집3/지상방위및무기시스템_3.json',
-        '/WEB/web-layout/data/군집3/지상방위및무기시스템_4.json',
+        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_1.json',
+        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_2.json',
+        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_3.json',
+        '../assets/data/companies/clusters/cluster-3/지상방위및무기시스템_4.json',
     ],
     군집4: [
-        '/WEB/web-layout/data/군집4/전자및시스템주요제품_1.json',
-        '/WEB/web-layout/data/군집4/전자및시스템주요제품_2.json',
-        '/WEB/web-layout/data/군집4/전자및시스템주요제품_3.json',
+        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_1.json',
+        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_2.json',
+        '../assets/data/companies/clusters/cluster-4/전자및시스템주요제품_3.json',
     ],
     군집5: [
-        '/WEB/web-layout/data/군집5/독일/라인메탈.json',
-        '/WEB/web-layout/data/군집5/미국/록히드마틴.json',
-        '/WEB/web-layout/data/군집5/미국/노스롭그루먼.json',
-        '/WEB/web-layout/data/군집5/미국/레이시온테크놀로지스.json',
-        '/WEB/web-layout/data/군집5/미국/보잉.json',
-        '/WEB/web-layout/data/군집5/미국/제너럴다이내믹스.json',
-        '/WEB/web-layout/data/군집5/영국/BAE시스템스.json',
-        '/WEB/web-layout/data/군집5/중국/중국항공공업집단.json',
-        '/WEB/web-layout/data/군집5/프랑스/탈레스그룹_사프란.json',
-    ],    
+        '../assets/data/companies/clusters/cluster-5/germany/라인메탈.json',
+        '../assets/data/companies/clusters/cluster-5/usa/록히드마틴.json',
+        '../assets/data/companies/clusters/cluster-5/usa/노스롭그루먼.json',
+        '../assets/data/companies/clusters/cluster-5/usa/레이시온테크놀로지스.json',
+        '../assets/data/companies/clusters/cluster-5/usa/보잉.json',
+        '../assets/data/companies/clusters/cluster-5/usa/제너럴다이내믹스.json',
+        '../assets/data/companies/clusters/cluster-5/uk/BAE시스템스.json',
+        '../assets/data/companies/clusters/cluster-5/china/중국항공공업집단.json',
+        '../assets/data/companies/clusters/cluster-5/france/탈레스그룹_사프란.json',
+    ],
 };
 
 const numberToColorMap = {
@@ -62,10 +62,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     alert(`선택된 기업(${company})에 대한 국가를 찾을 수 없습니다.`);
                     continue;
                 }
-                path = `/WEB/web-layout/data/${cluster}/${country}/${company}.json`;
+                const countryMap = {
+                    '독일': 'germany',
+                    '미국': 'usa',
+                    '영국': 'uk',
+                    '중국': 'china',
+                    '프랑스': 'france'
+                };
+                path = `../assets/data/companies/clusters/cluster-5/${countryMap[country] || country}/${company}.json`;
             } else {
                 // 군집5 외 다른 군집의 경로
-                path = `/WEB/web-layout/data/${cluster}/${company}.json`;
+                const clusterMap = {
+                    '군집1': 'cluster-1',
+                    '군집2': 'cluster-2',
+                    '군집3': 'cluster-3',
+                    '군집4': 'cluster-4'
+                };
+                path = `../assets/data/companies/clusters/${clusterMap[cluster]}/${company}.json`;
             }
     
             try {

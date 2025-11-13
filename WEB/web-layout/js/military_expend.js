@@ -102,7 +102,7 @@
 import { fetchJsonData, initializeCountryDropdown, filterDataByCountry } from './common.js';
 
 const jsonFiles = {
-    military: '/WEB/web-layout/data/military_expenses_data.json',
+    military: '../assets/data/core/military-expenses.json',
 };
 
 let militaryChart = null; // 전역 변수로 초기화

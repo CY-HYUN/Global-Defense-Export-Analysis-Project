@@ -9,9 +9,9 @@
     <title>전자 및 시스템 - DEFT</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href="/WEB/web-layout/css/layout.css" rel="stylesheet">
-    <link href="/WEB/web-layout/css/main_css.css" rel="stylesheet">
-    <link href="/WEB/web-layout/css/company_news.css" rel="stylesheet">
+    <link href="../../../css/layout.css" rel="stylesheet">
+    <link href="../../../css/main_css.css" rel="stylesheet">
+    <link href="../../../css/company_news.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -175,7 +175,7 @@
 <body>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="/WEB/web-layout/index.html"><img src="/WEB/web-layout/data/logo.png" style="max-width: 30%; height: auto;"></a>
+        <a class="navbar-brand ps-3" href="../../../index.html"><img src="../../../assets/images/logos/dmz-logo.png" style="max-width: 30%; height: auto;"></a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -204,21 +204,21 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading"></div>
-                        <a class="nav-link" href="/WEB/web-layout/html/data/analysis_1.html">국가별 데이터</a>
+                        <a class="nav-link" href="../../data/analysis_1.html">국가별 데이터</a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseResearch" aria-expanded="false" aria-controls="collapseResearch">
                             기업별 데이터
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseResearch" aria-labelledby="headingResearch" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="/WEB/web-layout/html/data/company/항공및우주기술.html"><i class="fas fa-plane"></i> &nbsp; 항공우주기술</a>
-                                <a class="nav-link" href="/WEB/web-layout/html/data/company/해양방위및조선업.html"><i class="fas fa-ship"></i> &nbsp; 해양방위</a>
-                                <a class="nav-link" href="/WEB/web-layout/html/data/company/전자및시스템주요제품.html"><i class="fas fa-microchip"></i> &nbsp; 전자 및 시스템</a>
-                                <a class="nav-link" href="/WEB/web-layout/html/data/company/지상방위및무기시스템.html"><i class="fas fa-shield-alt"></i> &nbsp; 지상방위</a>
-                                <a class="nav-link" href="/WEB/web-layout/html/data/company/해외기업.html"><i class="fas fa-globe"></i> &nbsp; 해외기업</a>
+                                <a class="nav-link" href="../../data/company/항공및우주기술.html"><i class="fas fa-plane"></i> &nbsp; 항공우주기술</a>
+                                <a class="nav-link" href="../../data/company/해양방위및조선업.html"><i class="fas fa-ship"></i> &nbsp; 해양방위</a>
+                                <a class="nav-link" href="../../data/company/전자및시스템주요제품.html"><i class="fas fa-microchip"></i> &nbsp; 전자 및 시스템</a>
+                                <a class="nav-link" href="../../data/company/지상방위및무기시스템.html"><i class="fas fa-shield-alt"></i> &nbsp; 지상방위</a>
+                                <a class="nav-link" href="../../data/company/해외기업.html"><i class="fas fa-globe"></i> &nbsp; 해외기업</a>
                             </nav>                                
                         </div>
-                        <a class="nav-link" href="/WEB/web-layout/html/data/analysis_3.html">비교 및 분석</a>                            
+                        <a class="nav-link" href="../../data/analysis_3.html">비교 및 분석</a>                            
                     </div>
                 </div>
             </nav>
@@ -244,20 +244,20 @@
                 <div class="container-fluid px-0">
                     <h1 class="mt-4"><i class="fas fa-chart-bar me-2"></i> 기업별 상세</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="/WEB/web-layout/index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/WEB/web-layout/html/data/analysis_2.html">기업별 상세 page</a></li>
+                        <li class="breadcrumb-item"><a href="../../../index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="../../data/analysis_2.html">기업별 상세 page</a></li>
                         <li class="breadcrumb-item active">전자 및 시스템 주요 제품</li>
                     </ol>
                     <h2 class="mt-4">전자 및 시스템 주요 제품</h2>
                     <div id="iframe-container">
-                        <iframe src="/WEB/web-layout/html/data/company/군집html/군집3.html" title="군집3 데이터"></iframe>
+                        <iframe src="../../data/company/군집html/군집3.html" title="군집3 데이터"></iframe>
                     </div>
                     <div id="cluster-content"></div>
                 </div>
                 <script>
                     $(document).ready(function() {
                         // AJAX로 군집1.html 로드
-                        $("#cluster-content").load("/WEB/web-layout/html/data/company/군집html/군집3.html", function(response, status, xhr) {
+                        $("#cluster-content").load("../../data/company/군집html/군집3.html", function(response, status, xhr) {
                             if (status === "error") {
                                 $("#cluster-content").html("<p style='color:red;'>군집3.html 로드 실패: " + xhr.status + " " + xhr.statusText + "</p>");
                             }
@@ -272,9 +272,9 @@
 
         // JSON 파일 경로
         const jsonFiles = [
-    { path: "/WEB/web-layout/data/군집4/전자및시스템주요제품_1.json", companyName: "Company 7" },
-    { path: "/WEB/web-layout/data/군집4/전자및시스템주요제품_2.json", companyName: "Company 2" },
-    { path: "/WEB/web-layout/data/군집4/전자및시스템주요제품_3.json", companyName: "Company 6" }
+    { path: "../../../data/군집4/전자및시스템주요제품_1.json", companyName: "Company 7" },
+    { path: "../../../data/군집4/전자및시스템주요제품_2.json", companyName: "Company 2" },
+    { path: "../../../data/군집4/전자및시스템주요제품_3.json", companyName: "Company 6" }
 ];
 // JSON 데이터 로드 함수
 async function loadJSONData() {

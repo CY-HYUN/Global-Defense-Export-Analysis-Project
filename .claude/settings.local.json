@@ -26,7 +26,8 @@
       "Bash(do echo \"Processing $file...\")",
       "Bash(cat:*)",
       "Bash(\"D:\\Study\\Github\\Global Defense Export Analysis Project\\README_PROFESSIONAL.md\")",
-      "Bash(\"D:/Study/Github/Global Defense Export Analysis Project/README_PROFESSIONAL.md\")"
+      "Bash(\"D:/Study/Github/Global Defense Export Analysis Project/README_PROFESSIONAL.md\")",
+      "Bash(dir *.md)"
     ],
     "deny": [],
     "ask": []

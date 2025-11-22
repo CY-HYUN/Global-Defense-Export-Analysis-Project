@@ -38,7 +38,7 @@ function displayHighlightedNews(article) {
     const desc = document.querySelector(".highlighted-news-content p");
     const author = document.querySelector(".highlighted-news-content .author");
 
-    if(img) img.src = article.urlToImage || "placeholder.jpg";
+    if(img) img.src = article.urlToImage || "assets/images/placeholder.jpg";
     if(title) {
         title.innerText = article.title || "No Title";
         title.href = article.url || "#";
@@ -56,7 +56,7 @@ function displaySliderNews(articles) {
     articles.forEach(article => {
         const newsHTML = `
             <div class="news-item">
-                <img src="${article.urlToImage || 'placeholder.jpg'}" alt="News Image" />
+                <img src="${article.urlToImage || 'assets/images/placeholder.jpg'}" alt="News Image" />
                 <h3><a href="${article.url || '#'}" target="_blank">${article.title || "No Title"}</a></h3>
                 <p class="author">By ${article.author || "Unknown"} - ${new Date(article.publishedAt).toLocaleDateString()}</p>
             </div>
@@ -74,7 +74,7 @@ function displayAdditionalNews(articles) {
     articles.slice(0, 3).forEach((article) => {
         const newsHTML = `
             <div class="news-item">
-                <img src="${article.urlToImage || 'placeholder.jpg'}" alt="News Image">
+                <img src="${article.urlToImage || 'assets/images/placeholder.jpg'}" alt="News Image">
                 <div class="news-content">
                     <h3><a href="${article.url}" target="_blank">${article.title || 'No Title'}</a></h3>
                     <p>${article.description || 'No description available.'}</p>

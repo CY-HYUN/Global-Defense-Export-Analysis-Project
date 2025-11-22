@@ -51,7 +51,7 @@ async function fetchCustomNews() {
 
 // 큰 뉴스 표시
 function displayCustomHighlightedNews(article) {
-    document.querySelector(".custom-highlighted-news-image").src = article.urlToImage || "placeholder.jpg";
+    document.querySelector(".custom-highlighted-news-image").src = article.urlToImage || "../../assets/images/placeholder.jpg";
     document.querySelector(".custom-highlighted-news-content h2 a").innerText = article.title || "No Title";
     document.querySelector(".custom-highlighted-news-content h2 a").href = article.url || "#";
     document.querySelector(".custom-highlighted-news-content p").innerText = article.description || "No Description";
@@ -66,7 +66,7 @@ function displayCustomSliderNews(articles) {
     articles.forEach(article => {
         const newsHTML = `
             <div class="custom-news-item">
-                <img src="${article.urlToImage || 'placeholder.jpg'}" alt="News Image" />
+                <img src="${article.urlToImage || '../../assets/images/placeholder.jpg'}" alt="News Image" />
                 <h3><a href="${article.url || '#'}" target="_blank">${article.title || "No Title"}</a></h3>
                 <p class="author">By ${article.author || "Unknown"} - ${new Date(article.publishedAt).toLocaleDateString()}</p>
             </div>
@@ -84,7 +84,7 @@ function displayCustomAdditionalNews(articles) {
     articles.slice(0, 3).forEach((article) => {
         const newsHTML = `
             <div class="custom-news-item">
-                <img src="${article.urlToImage || 'placeholder.jpg'}" alt="News Image">
+                <img src="${article.urlToImage || '../../assets/images/placeholder.jpg'}" alt="News Image">
                 <div class="custom-news-content">
                     <h3><a href="${article.url}" target="_blank">${article.title || 'No Title'}</a></h3>
                     <p>${article.description || 'No description available.'}</p>

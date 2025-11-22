@@ -70,8 +70,8 @@ export const initPopup = () => {
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             padding: 10px;
             z-index: 1000;
-            width: 400px;
-            max-height: 500px;
+            width: 1000px;
+            max-height: 1200px;
             overflow-y: auto;
             pointer-events: auto;
             overflow-x: hidden;
@@ -493,7 +493,7 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
 
     const canvas = document.createElement('canvas');
     if (title === 'Weapon Systems Distribution' || title === 'Weapon Imports Distribution') {
-        canvas.style.height = '400px'; // Increased height for weapon charts
+        canvas.style.height = '800px'; // Increased height for weapon charts
     } else {
         canvas.style.height = '300px';
     }

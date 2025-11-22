@@ -350,6 +350,9 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
 
     } else if (title === 'Governance Stability Over Time') {
         const indicators = ['CC', 'GE', 'PV', 'RL', 'RQ', 'VA'];
+        // indicatorNames is already defined at module level or inside function, but let's ensure it's available
+        // It was seen in the view_file output earlier as being defined inside the function in the previous version? 
+        // No, it was defined inside the else if block in the view_file output.
         const indicatorNames = {
             'CC': 'Control of Corruption (부패 통제)',
             'GE': 'Government Effectiveness (정부 효율성)',
@@ -363,8 +366,11 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
         labels = [...new Set(countryData.map(item => item.year))];
         datasets = indicators.map((indicator, index) => {
             return {
-                label: indicator,
-                fullName: indicatorNames[indicator],
+                label: indicator, // Keep short label for legend to save space, or use full name? User asked for tooltip.
+                // Let's use the short label for the line, but we can try to make the tooltip show the full name.
+                // Actually, the user said "When hovering... a tooltip should appear, displaying the full meaning".
+                // Chart.js tooltips usually show the label.
+                // We can customize the tooltip callback.
                 data: labels.map(year => {
                     const record = countryData.find(item => item.year === year && item.indicator === indicator.toLowerCase());
                     return record ? record.estimate : null;
@@ -373,17 +379,52 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
                 backgroundColor: colors[index],
                 fill: false,
                 tension: 0.4,
+                indicatorFullName: indicatorNames[indicator] // Custom property for tooltip
             };
         });
+        
+        // We need to pass options to enabling custom tooltips. 
+        // Since createChart creates the chart instance later, we might need to modify the options object passed to new Chart().
+        // However, the current createChart implementation likely has a generic options object.
+        // I should check if I can inject options or if I need to modify the Chart creation part.
+        // Looking at the file content I viewed earlier, the Chart creation is at the end of the function.
+        // I will need to modify the options generation logic or the Chart constructor call.
+        // But wait, I can't see the Chart constructor call in the snippet I viewed.
+        // I should probably read the file again to be safe, but I'll assume I can modify the options.
+        // Actually, I'll just modify the datasets here and then I'll need to find where `options` are defined.
+        // If options are defined globally for all charts, I might need to make it conditional.
+        
+        // Let's look at the `Weapon Systems Distribution` block first.
+
 
     } else if (title === 'Weapon Systems Distribution') {
-        labels = [...new Set(countryData.map(item => item.Category))];
-        backgroundColors = generateColors(labels.length);
-        const categoryDetails = labels.map(category => {
+        const categoryMapping = {
+            '2': 'Artillery (포병)',
+            '4': 'Rocket Systems (로켓 시스템)',
+            '6': 'Naval Vessels (해군 함정)',
+            '7': 'Armored Vehicles (장갑차)',
+            '8': 'Aircraft (항공기)',
+            '9': 'Trainer Aircraft (훈련기)',
+            '20': 'Submarines (잠수함)',
+            '22': 'Personnel (인력)',
+             // Handle combinations if they appear as exact strings, otherwise we might need a function
+            '6,20': 'Naval Vessels & Submarines' 
+        };
+
+        labels = [...new Set(countryData.map(item => item.Category))].map(cat => categoryMapping[cat] || `Category ${cat}`);
+        
+        // We need to map the original categories to the new labels for grouping
+        // Or just use the mapped labels directly.
+        // The original code used `item.Category` to filter.
+        const uniqueCategories = [...new Set(countryData.map(item => item.Category))];
+        
+        backgroundColors = generateColors(uniqueCategories.length);
+        const categoryDetails = uniqueCategories.map((category, index) => {
             const items = countryData.filter(item => item.Category === category);
             const weaponTypes = [...new Set(items.map(item => item.Metric))];
             return {
-                category: category,
+                category: categoryMapping[category] || `Category ${category}`, // Use mapped name
+                originalCategory: category,
                 count: items.length,
                 weaponTypes: weaponTypes.slice(0, 3)
             };
@@ -395,13 +436,40 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
         }];
 
     } else if (title === 'Weapon Imports Distribution') {
-        labels = [...new Set(countryData.map(item => item['USML Category']))];
-        backgroundColors = generateColors(labels.length);
-        const categoryDetails = labels.map(category => {
+         const usmlMapping = {
+            '1': 'Firearms (화기)',
+            '2': 'Guns & Armament (포 및 무장)',
+            '3': 'Ammunition (탄약)',
+            '4': 'Missiles/Rockets/Bombs (미사일/로켓/폭탄)',
+            '5': 'Explosives (폭발물)',
+            '6': 'Surface Vessels (수상함)',
+            '7': 'Ground Vehicles (지상 차량)',
+            '8': 'Aircraft (항공기)',
+            '9': 'Training Equipment (훈련 장비)',
+            '10': 'Protective Equipment (보호 장비)',
+            '11': 'Electronics (전자 장비)',
+            '12': 'Fire Control/Sensors (사격 통제/센서)',
+            '13': 'Materials (재료)',
+            '14': 'Toxicological Agents (독성 작용제)',
+            '15': 'Spacecraft (우주선)',
+            '16': 'Nuclear (핵)',
+            '17': 'Classified (기밀)',
+            '18': 'Directed Energy (지향성 에너지)',
+            '19': 'Gas Turbine Engines (가스 터빈 엔진)',
+            '20': 'Submersible Vessels (잠수정)',
+            '21': 'Misc (기타)'
+        };
+
+        const uniqueCategories = [...new Set(countryData.map(item => item['USML Category']))];
+        labels = uniqueCategories.map(cat => usmlMapping[cat] || `USML ${cat}`);
+        
+        backgroundColors = generateColors(uniqueCategories.length);
+        const categoryDetails = uniqueCategories.map(category => {
             const items = countryData.filter(item => item['USML Category'] === category);
             const weaponDescriptions = [...new Set(items.map(item => item['Weapon description']))];
             return {
-                category: category,
+                category: usmlMapping[category] || `USML ${category}`,
+                originalCategory: category,
                 count: items.length,
                 weaponDescriptions: weaponDescriptions.slice(0, 3)
             };
@@ -424,7 +492,11 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
     }
 
     const canvas = document.createElement('canvas');
-    canvas.style.height = '300px';
+    if (title === 'Weapon Systems Distribution' || title === 'Weapon Imports Distribution') {
+        canvas.style.height = '400px'; // Increased height for weapon charts
+    } else {
+        canvas.style.height = '300px';
+    }
     container.appendChild(canvas);
 
     if (title === 'Weapon Systems Distribution' || title === 'Weapon Imports Distribution') {
@@ -455,6 +527,50 @@ async function createChart(container, countryName, data, title, yAxisLabel, char
                 text: title,
                 font: { size: 14, weight: 'bold' },
                 padding: { top: 10, bottom: 10 }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        
+                        // Governance Stability Over Time
+                        if (title === 'Governance Stability Over Time') {
+                            const dataset = context.dataset;
+                            if (dataset.indicatorFullName) {
+                                return `${dataset.indicatorFullName}: ${context.raw}`;
+                            }
+                        }
+
+                        // Weapon Systems / Imports Distribution
+                        if (title === 'Weapon Systems Distribution' || title === 'Weapon Imports Distribution') {
+                             const dataset = context.dataset;
+                             const index = context.dataIndex;
+                             const details = dataset.categoryDetails && dataset.categoryDetails[index];
+                             
+                             if (details) {
+                                 const lines = [`${details.category}: ${details.count}`];
+                                 
+                                 if (details.weaponTypes && details.weaponTypes.length > 0) {
+                                     lines.push('Top Types: ' + details.weaponTypes.join(', '));
+                                 }
+                                 if (details.weaponDescriptions && details.weaponDescriptions.length > 0) {
+                                     lines.push('Top Items: ' + details.weaponDescriptions.join(', '));
+                                 }
+                                 return lines;
+                             }
+                        }
+
+                        if (context.parsed.y !== null) {
+                            label += context.parsed.y;
+                        } else {
+                             label += context.raw;
+                        }
+                        return label;
+                    }
+                }
             }
         },
         scales: chartType === 'bar' || chartType === 'line' ? {

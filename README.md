@@ -81,7 +81,7 @@ Score defense industry export feasibility based on each country's **economic, po
 
 ### Overall Data Flow Diagram
 
-![Data Flow Diagram](doc_images/photo_page-0001.jpg)
+![Data Flow Diagram](docs/Photo/photo_page-0001.jpg)
 
 ```
 ┌─────────────────┐
@@ -134,7 +134,7 @@ Score defense industry export feasibility based on each country's **economic, po
 
 ### Database Schema (ERD)
 
-![ERD Diagram](WEB/docs/Photo/photo_page-0002.jpg)
+![ERD Diagram](docs/Photo/photo_page-0002.jpg)
 
 **8 Main Table Structure**:
 
@@ -166,7 +166,7 @@ Score defense industry export feasibility based on each country's **economic, po
 
 **Methodology - Cycloid Weight Function**:
 
-![Scoring Methodology](WEB/docs/Photo/photo_page-0005.jpg)
+![Scoring Methodology](docs/Photo/photo_page-0005.jpg)
 
 ```python
 # Time weighting: Exponential weight to recent years
@@ -213,7 +213,7 @@ score = MinMaxScaler(20, 100).fit_transform(log(weighted_sum))
 
 **Statistical Model**: OLS (Ordinary Least Squares) Regression
 
-![OLS Regression Results](WEB/docs/Photo/photo_page-0009.jpg)
+![OLS Regression Results](docs/Photo/photo_page-0009.jpg)
 
 **Model Results**:
 
@@ -244,7 +244,7 @@ Coefficients:
 
 **"Can we identify country-specific weapon import portfolio characteristics using US ITAR categories?"**
 
-![Weapon Classification System](WEB/docs/Photo/photo_page-0008.jpg)
+![Weapon Classification System](docs/Photo/photo_page-0008.jpg)
 
 **Methodology - ITAR 22 Categories**:
 
@@ -282,7 +282,7 @@ country_portfolio = df.groupby(['Country', 'ITAR_Category']).size()
 
 **"Can we cluster defense companies based on product categories to understand competitive dynamics?"**
 
-![Company Clustering Analysis](WEB/docs/Photo/photo_page-0011.jpg)
+![Company Clustering Analysis](docs/Photo/photo_page-0011.jpg)
 
 **5 Cluster Classification**:
 
@@ -304,7 +304,7 @@ country_portfolio = df.groupby(['Country', 'ITAR_Category']).size()
 
 ### Data Source Integration
 
-![Data Preprocessing Process](WEB/docs/Photo/photo_page-0003.jpg)
+![Data Preprocessing Process](docs/Photo/photo_page-0003.jpg)
 
 | Source         | Data Provided                        | Countries | Period    | Size   |
 | -------------- | ------------------------------------ | --------- | --------- | ------ |
@@ -319,7 +319,7 @@ country_portfolio = df.groupby(['Country', 'ITAR_Category']).size()
 
 ### Preprocessing Pipeline
 
-![Preprocessing Issues](WEB/docs/Photo/photo_page-0004.jpg)
+![Preprocessing Issues](docs/Photo/photo_page-0004.jpg)
 
 #### 1. Country Name Standardization
 
@@ -386,7 +386,7 @@ Feature Engineering → Scoring → Clustering → Predictive Modeling
 
 ### 1. Economic Indicator Scoring
 
-![Economic Scoring](WEB/docs/Photo/photo_page-0006.jpg)
+![Economic Scoring](docs/Photo/photo_page-0006.jpg)
 
 **Weighted average of 9 variables**:
 
@@ -465,7 +465,7 @@ conflict_score[country_deaths == 0] = 100
 
 ### 4. K-Means Clustering
 
-![K-Means Clustering](WEB/docs/Photo/photo_page-0007.jpg)
+![K-Means Clustering](docs/Photo/photo_page-0007.jpg)
 
 **Elbow Method determined optimal k=3**:
 
@@ -564,7 +564,7 @@ Others                         ██ 5%
 
 The **DEFT (Defense Export Feasibility Tracker)** web platform provides defense industry export target analysis results for 172 countries through an **interactive interface**.
 
-![Web Platform Screenshots](WEB/docs/Photo/photo_page-0011.jpg)
+![Web Platform Screenshots](docs/Photo/photo_page-0011.jpg)
 
 ### Major Page Features
 
@@ -625,7 +625,7 @@ The **DEFT (Defense Export Feasibility Tracker)** web platform provides defense 
 
 #### 5. Company Clustering Analysis (Cluster HTML)
 
-![Company Clustering Pages](WEB/docs/Photo/photo_page-0012.jpg)
+![Company Clustering Pages](docs/Photo/photo_page-0012.jpg)
 
 **5 Cluster Selection**:
 
@@ -645,7 +645,7 @@ The **DEFT (Defense Export Feasibility Tracker)** web platform provides defense 
 
 #### 6. Country Comparison Analysis (analysis_3.html)
 
-![Comparison Analysis Pages](WEB/docs/Photo/photo_page-0013.jpg)
+![Comparison Analysis Pages](docs/Photo/photo_page-0013.jpg)
 
 **Section 1: Multi-Country Comparison** (up to 3 countries)
 

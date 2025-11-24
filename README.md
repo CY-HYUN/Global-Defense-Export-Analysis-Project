@@ -81,7 +81,11 @@ Score defense industry export feasibility based on each country's **economic, po
 ## 🎥 Live Demo of the Web Implementation
 
 <div align="center">
-  <video src="docs/Photo/Live Demo of the Web Implementation.mp4" width="100%" controls autoplay muted></video>
+
+https://github.com/user-attachments/assets/your-video-id-here
+
+_Click to watch the live demo of the web implementation_
+
 </div>
 
 ---

@@ -29,19 +29,20 @@ Defense Export Feasibility Tracker
 ## 📋 Table of Contents
 
 1. [Project Overview](#-project-overview)
-2. [System Architecture](#-system-architecture)
-3. [Research Questions & Methodology](#-research-questions--methodology)
-4. [Data Collection & Preprocessing](#-data-collection--preprocessing)
-5. [Data Analysis Methodology](#-data-analysis-methodology)
-6. [Analysis Results](#-analysis-results)
-7. [Web Platform](#-web-platform)
-8. [Technology Stack & Execution](#-technology-stack--execution)
-9. [Project Achievements](#-project-achievements)
-10. [Key Insights](#-key-insights)
-11. [Data Quality Assurance](#-data-quality-assurance)
-12. [Project Limitations & Future Directions](#-project-limitations--future-directions)
-13. [References](#-references)
-14. [Project Significance](#-project-significance)
+2. [Live Demo of the Web Implementation](#-live-demo-of-the-web-implementation)
+3. [System Architecture](#-system-architecture)
+4. [Research Questions & Methodology](#-research-questions--methodology)
+5. [Data Collection & Preprocessing](#-data-collection--preprocessing)
+6. [Data Analysis Methodology](#-data-analysis-methodology)
+7. [Analysis Results](#-analysis-results)
+8. [Web Platform](#-web-platform)
+9. [Technology Stack & Execution](#-technology-stack--execution)
+10. [Project Achievements](#-project-achievements)
+11. [Key Insights](#-key-insights)
+12. [Data Quality Assurance](#-data-quality-assurance)
+13. [Project Limitations & Future Directions](#-project-limitations--future-directions)
+14. [References](#-references)
+15. [Project Significance](#-project-significance)
 
 ---
 
@@ -74,6 +75,14 @@ Build a **customized information provision platform** that aggregates country-sp
 ```
 
 Score defense industry export feasibility based on each country's **economic, political, and conflict** indicators
+
+---
+
+## 🎥 Live Demo of the Web Implementation
+
+<div align="center">
+  <video src="docs/Photo/Live Demo of the Web Implementation.mp4" width="100%" controls autoplay muted></video>
+</div>
 
 ---
 

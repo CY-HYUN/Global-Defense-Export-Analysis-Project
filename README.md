@@ -82,7 +82,9 @@ Score defense industry export feasibility based on each country's **economic, po
 
 <div align="center">
 
-https://github.com/user-attachments/assets/dd736c91-aa06-42cd-a50b-2ada05e3bcba
+![Live Demo](docs/Photo/Live%20Demo%20of%20the%20Web%20Implementation.mp4)
+
+_📹 [Click here to watch the full demo video](docs/Photo/Live%20Demo%20of%20the%20Web%20Implementation.mp4)_
 
 </div>
 

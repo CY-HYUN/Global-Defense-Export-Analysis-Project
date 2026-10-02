@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 새로운 API를 통해 뉴스 데이터 가져오기
 async function fetchCustomNews() {
-    const apiKey = "***REMOVED***"; // 여기에 NewsAPI에서 발급받은 API Key 입력
+    const apiKey = ""; // 여기에 NewsAPI에서 발급받은 API Key 입력
     const url = `https://newsapi.org/v2/everything?q=(한화에어로스페이스 OR 한화디펜스 OR 한국항공우주산업 OR KAI OR 현대로템 OR LIG넥스원 OR 현대중공업 OR 한화오션 OR SNT모티브 OR 풍산 OR 대한항공 OR 휴니드테크 OR 한화시스템) AND (방위산업 OR 국방 OR 군사)&language=ko&apiKey=${apiKey}`;
 
     try {

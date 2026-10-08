@@ -8,8 +8,8 @@ An open-data analysis and interactive web platform that scores countries as defe
 
 ## Results
 
-- **Economic capacity is the only strong predictor of arms imports.** OLS regression (statsmodels, 125 countries in the training split, 5 predictors): economic score coefficient **+23,170 TIV per standard deviation, p < 0.001**. Governance score: p = 0.791 (no measurable effect). Conflict score: p = 0.093 (borderline). Model fit: **R² = 0.366** on the training set, **0.461** on the held-out 20% test set. Source: [docs/analysis-results.pdf](docs/analysis-results.pdf), regression output in [docs/Photo/photo_page-0009.jpg](docs/Photo/photo_page-0009.jpg).
-- **170 countries scored and graded A/B/C** on three axes (economic / governance / conflict) using K-Means (k = 3, elbow-validated). Verified top of the ranking:
+- **Economic capacity is the only predictor of arms imports significant at the 5% level.** OLS regression (statsmodels, 125 countries in the training split, 5 predictors): economic score coefficient **+23,170 TIV per standard deviation, p < 0.001**. Governance score: p = 0.791 (no measurable effect). Conflict score: p = 0.093 (borderline). Model fit: **R² = 0.366** on the training set, **0.461** on the held-out 20% test split (about 32 countries, derived from `test_size=0.2` and the 125 training rows); R² is measured against predicting the mean import volume. Source: [docs/analysis-results.pdf](docs/analysis-results.pdf), regression output in [docs/Photo/photo_page-0009.jpg](docs/Photo/photo_page-0009.jpg).
+- **170 countries scored and graded A/B/C** from three scores (economic / governance / conflict) using K-Means (k = 3, elbow method) over the three scores plus their average. Verified top of the ranking:
 
   | Rank | Country | Economic | Governance | Conflict | Average | Grade |
   | --- | --- | --- | --- | --- | --- | --- |
@@ -19,7 +19,7 @@ An open-data analysis and interactive web platform that scores countries as defe
   | 4 | Canada | 67.1 | 77.3 | 100.0 | **81.46** | A |
   | 5 | Switzerland | 63.9 | 79.3 | 100.0 | **81.08** | A |
 
-- **102,321 records across 13 committed JSON datasets** (`assets/data/`, ~54 MB, 1991-2020) integrated from World Bank, SIPRI, UCDP GED, and WGI — 210+ raw country-name variants standardized.
+- **102,321 records across 13 committed JSON datasets** (`assets/data/`, ~54 MB, 1991-2020) integrated from World Bank, SIPRI, UCDP GED, and WGI — 210+ raw country-name variants standardized (count from the course's preprocessing notebooks, which are not committed). The record count is the sum of rows over the 13 files; two of them are identical copies of the same terrain table (`country_terrain_with_coordinates.json` and `나라별지형_with_coordinates.json`, 133 rows each).
 - **A fully static, no-backend web platform** to explore all of it: Leaflet world-map dashboard, DataTables data explorer, Chart.js analysis pages, and 196 per-country map pages.
 
 **Demo video**: [YouTube walkthrough of the web platform](https://youtu.be/yfw2wbxgnqM)
@@ -93,14 +93,14 @@ Full detail with code excerpts: [docs/DETAILS.md](docs/DETAILS.md)
 - **Economic score** — weighted average of 9 World Bank variables (GDP growth, income distribution, military share of GDP, trade balance, international capital, unemployment, FX reserves, public debt, CPI) → log transform → min-max scaled to 20-80.
 - **Governance score** — mean percentile rank of the 6 WGI indicators (government effectiveness, regulatory quality, rule of law, voice and accountability, political stability, control of corruption).
 - **Conflict score** — cycloid-weighted battle deaths (UCDP GED) → log transform → reverse min-max scale, so more deaths = lower score; countries with zero recorded conflict deaths score 100.
-- **Grading** — K-Means (k = 3, chosen by elbow method) over the three scores → A/B/C export-target grades.
+- **Grading** — K-Means (k = 3, chosen by elbow method) over the three scores plus their average (standardized) → A/B/C export-target grades.
 - **Prediction** — OLS of total weapon-import TIV (SIPRI) on the three scores plus cluster dummies, 80/20 train/test split with standardized features.
 
 ## Key findings
 
-1. **Money, not politics, buys weapons.** The economic score is the only predictor significant at the 5% level (p < 0.001); the governance score shows no relationship with import volume (p = 0.791). Politically unstable but economically capable countries import heavily — target screening should weight purchasing power over political stability.
+1. **Purchasing power, not governance, tracks arms imports.** The economic score is the only predictor significant at the 5% level (p < 0.001); the governance score shows no relationship with import volume (p = 0.791). This is an association in one cross-sectional regression, not a causal effect; on this evidence, target screening should weight purchasing power over governance scores.
 2. **Conflict is borderline** (p = 0.093): not significant at the 5% level, and its direction is not settled in the committed outputs.
-3. **Most of the variance is elsewhere.** R² = 0.366 means ~63% of import variation is driven by factors outside these indicators — alliance structures, political decisions, technology-transfer/offset deals — which bounds how far indicator-only screening can go.
+3. **Most of the variance is unexplained.** R² = 0.366 leaves ~63% of the training-set variation in imports unexplained by these indicators. The repository does not test what explains the rest; alliance structures and offset deals are open hypotheses. This bounds how far indicator-only screening can go.
 4. **South Korea's import mix** (from the committed SIPRI-derived records: 509 import entries, 1991-2020, mapped to US ITAR/USML categories): missiles (Cat. 4) 34.8%, aircraft (Cat. 8) 20.6%, military electronics (Cat. 11) 11.0% of entries.
 
 ## Verify the numbers yourself
@@ -113,7 +113,7 @@ from collections import Counter
 
 files = glob.glob('assets/data/*.json')
 total = sum(len(json.load(open(p, encoding='utf-8'))) for p in files)
-print(f'{len(files)} datasets, {total} records')          # 13 datasets, 102321 records
+print(f'{len(files)} datasets, {total} records')          # 13 datasets, 102321 records (row sum; two files are identical copies)
 
 scored = json.load(open('assets/data/Economy_data.json', encoding='utf-8'))
 print(f'{len(scored)} countries in the scored set')        # 170
@@ -132,7 +132,7 @@ The regression numbers come from the committed statsmodels output ([docs/Photo/p
 | Layer | Tools |
 | --- | --- |
 | Analysis (offline) | Python, pandas, NumPy, scikit-learn (KMeans, scalers), statsmodels (OLS) |
-| Frontend | HTML5, CSS3, JavaScript (ES6 modules), Bootstrap 5.2.3 |
+| Frontend | HTML5, CSS3, JavaScript (ES6 modules), Bootstrap 5.2.2 / 5.2.3 (pages load one or the other) |
 | Visualization | Chart.js 3.7.1, Leaflet 1.9.3, DataTables/simple-datatables |
 | Data | 13 committed JSON datasets; optional NewsAPI feed |
 
@@ -150,6 +150,9 @@ The regression numbers come from the committed statsmodels output ([docs/Photo/p
 - SIPRI TIV measures transfer volume, not contract value — unit prices are ignored.
 - The scored set is 170 countries after standardization and filtering; raw source coverage varies widely per dataset, from 31 countries (R&D spending) to 230 (arms imports).
 - Analysis notebooks are not in the repo; all numbers above are taken from the committed regression output, report, and datasets (record counts and the Korea category split are directly recomputable from `assets/data/`).
+- The OLS p-values assume normal errors with constant variance, and the committed output shows heavily skewed residuals (skew 2.676, kurtosis 13.948, Jarque-Bera p = 1.10e-168) with non-robust standard errors. Treat the p-values as approximate; robust standard errors were not computed.
+- One 80/20 split with one seed; the held-out R² rests on about 32 countries, and fewer than the 170 scored countries entered the regression.
+- The regression includes the cluster dummies alongside the three scores they were built from.
 
 ## Credits
 

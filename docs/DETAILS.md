@@ -11,7 +11,7 @@ Extended documentation for the [main README](../README.md). Every number here is
 
 ## 2. Data inventory (committed in `assets/data/`)
 
-13 JSON files, 102,321 records total (~54 MB), plus per-cluster company files under `assets/data/companies/`.
+13 JSON files (two are the same terrain table), 102,188 distinct records (~54 MB), plus per-cluster company files under `assets/data/companies/`.
 
 | File | Records | Coverage | Content |
 | --- | --- | --- | --- |

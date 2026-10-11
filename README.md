@@ -19,7 +19,7 @@ An open-data analysis and interactive web platform that scores countries as defe
   | 4 | Canada | 67.1 | 77.3 | 100.0 | **81.46** | A |
   | 5 | Switzerland | 63.9 | 79.3 | 100.0 | **81.08** | A |
 
-- **102,321 records across 13 committed JSON datasets** (`assets/data/`, ~54 MB, 1991-2020) integrated from World Bank, SIPRI, UCDP GED, and WGI — 210+ raw country-name variants standardized (count from the course's preprocessing notebooks, which are not committed). The record count is the sum of rows over the 13 files; two of them are identical copies of the same terrain table (`country_terrain_with_coordinates.json` and `나라별지형_with_coordinates.json`, 133 rows each).
+- **102,188 records across 12 distinct datasets** (13 committed JSON files; the terrain table is committed twice) (`assets/data/`, ~54 MB, 1991-2020) integrated from World Bank, SIPRI, UCDP GED, and WGI — 210+ raw country-name variants standardized (count from the course's preprocessing notebooks, which are not committed). The record count is the sum of rows over the 13 files; two of them are identical copies of the same terrain table (`country_terrain_with_coordinates.json` and `나라별지형_with_coordinates.json`, 133 rows each).
 - **A fully static, no-backend web platform** to explore all of it: Leaflet world-map dashboard, DataTables data explorer, Chart.js analysis pages, and 196 per-country map pages.
 
 **Demo video**: [YouTube walkthrough of the web platform](https://youtu.be/yfw2wbxgnqM)
@@ -58,7 +58,7 @@ Notes:
 index.html          Global dashboard (Leaflet map + news feed)
 html/               Analysis, data-table, comparison, and 196 per-country map pages
 js/, css/           Site logic (ES6 modules) and styles
-assets/data/        13 processed JSON datasets — the ETL output (102,321 records)
+assets/data/        13 processed JSON files, 12 distinct datasets — the ETL output (102,188 records)
 scripts/            Python utilities used to generate/maintain the per-country pages
 docs/               Final report (Korean, PDF/PPTX), analysis-results.pdf,
                     methodology slides (docs/Photo/), ERD diagrams
@@ -113,7 +113,7 @@ from collections import Counter
 
 files = glob.glob('assets/data/*.json')
 total = sum(len(json.load(open(p, encoding='utf-8'))) for p in files)
-print(f'{len(files)} datasets, {total} records')          # 13 datasets, 102321 records (row sum; two files are identical copies)
+print(f'{len(files)} datasets, {total} records')          # 13 datasets, 102321 records: the row sum counts the terrain table twice (two identical files, 133 rows), so 102,188 distinct records
 
 scored = json.load(open('assets/data/Economy_data.json', encoding='utf-8'))
 print(f'{len(scored)} countries in the scored set')        # 170
